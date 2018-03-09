@@ -2,7 +2,7 @@ import pygame
 
 from env_logic.environment import Environment
 
-env = Environment()
+env = Environment(enable_rendering=True)
 clock = pygame.time.Clock()
 done = False
 
