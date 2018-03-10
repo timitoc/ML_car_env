@@ -1,4 +1,5 @@
 import pygame
+import math
 
 from actor import Actor
 from utils.constants import *
@@ -6,37 +7,38 @@ from utils.point import Point
 
 
 class Car(Actor):
-    def __init__(self, position=Point(0, 0)):
+    def __init__(self, position=Point(320, 240)):
         super(Car, self).__init__(position)
+        self.image = pygame.image.load('sprites/car.png')
+        self.original_image = self.image
+        self.rect = self.image.get_rect()
+        self.rect.center = (320, 240)
+        self.angle = 0
+        self.speed = 0
+
+    def updateimg(self):
+        x, y = self.rect.center
+        self.image = pygame.transform.rotate(self.original_image, self.angle)
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
 
     def draw(self, screen):
         super(Car, self).draw(screen)
-
-        # Head
-        pygame.draw.ellipse(screen, BLACK, [1 + self.position.x, self.position.y, 10, 10], 0)
-
-        # Legs
-        pygame.draw.line(screen, BLACK, [5 + self.position.x, 17 + self.position.y],
-                         [10 + self.position.x, 27 + self.position.y], 2)
-        pygame.draw.line(screen, BLACK, [5 + self.position.x, 17 + self.position.y],
-                         [self.position.x, 27 + self.position.y], 2)
-
-        # Body
-        pygame.draw.line(screen, RED, [5 + self.position.x, 17 + self.position.y],
-                         [5 + self.position.x, 7 + self.position.y], 2)
-
-        # Arms
-        pygame.draw.line(screen, RED, [5 + self.position.x, 7 + self.position.y],
-                         [9 + self.position.x, 17 + self.position.y], 2)
-        pygame.draw.line(screen, RED, [5 + self.position.x, 7 + self.position.y],
-                         [1 + self.position.x, 17 + self.position.y], 2)
+        self.updateimg()
+        screen.blit(self.image, (self.rect.x, self.rect.y))
 
     def update(self, action):
         if action == Action.STEER_LEFT:
-            self.position.x -= 1
+            self.angle = (self.angle + 0.2) % 360
         elif action == Action.STEER_RIGHT:
-            self.position.x += 1
+            self.angle = (self.angle - 0.2) % 360
         elif action == Action.ACCELERATE:
-            self.position.y -= 1
+            if self.speed <= 10:
+                self.speed += 0.2
         elif action == Action.BREAK:
-            self.position.y += 1
+            if self.speed > 0:
+                self.speed -= 1
+            elif self.speed < 0:
+                self.speed += 1
+        self.rect.x += (self.speed * math.cos(self.angle * (math.pi / 180)))
+        self.rect.y += (self.speed * math.sin(self.angle / (math.pi / 180)))
