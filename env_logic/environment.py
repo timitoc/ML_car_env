@@ -7,22 +7,38 @@ from utils.constants import *
 
 
 class Environment(object):
-    def __init__(self, size=[640, 480]):
-        pygame.init()
+    def __init__(self, size=[640, 480], enable_rendering=True):
         self.size = size
-        self.screen = pygame.display.set_mode(size)
-        pygame.display.set_caption("Car parking simulator")
-        self.scene = Scene(self.screen)
-        self.scene.add_actor(Car())
-        self.scene.add_actor(Obstacle(1))
-        self.scene.add_actor(Obstacle(2))
-        self.scene.add_actor(Obstacle(4))
+        self.enable_rendering = enable_rendering
+        if enable_rendering:
+            pygame.init()
+            self.screen = pygame.display.set_mode(size)
+            pygame.display.set_caption("Car parking simulator")
+            self.scene = Scene(self.screen)
+        else:
+            self.scene = Scene(None)
+        self.reset()
         pygame.mouse.set_visible(0)
 
     def step(self, action_value):
         self.scene.update(Action(action_value))
+        observation = self.scene.get_observation()
+        reward = self.scene.get_reward()
+        done = self.scene.check_done()
+        info = self.scene.get_auxiliar_info()
+        return observation, reward, done, info
+
+    def reset(self):
+        self.scene.clear()
+        self.scene.set_car(Car())
+        self.scene.add_obstacle(Obstacle(1))
+        self.scene.add_obstacle(Obstacle(2))
+        self.scene.add_obstacle(Obstacle(4))
+        return self.scene.get_observation()
 
     def render(self):
+        if not self.enable_rendering:
+            return
         self.screen.fill(WHITE)
         self.scene.draw()
         pygame.display.flip()

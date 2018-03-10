@@ -2,14 +2,14 @@ import pygame
 
 from env_logic.environment import Environment
 
-env = Environment()
+env = Environment(enable_rendering=True)
 clock = pygame.time.Clock()
-done = False
+end_sim = False
 
-while not done:
+while not end_sim:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            done = True
+            end_sim = True
 
     pressed = pygame.key.get_pressed()
     action_val = 0
@@ -30,8 +30,10 @@ while not done:
     if pressed[pygame.K_UP] and pressed[pygame.K_LEFT]:
         action_val = 6
 
-    env.step(action_val)
+    _, _, done, _ = env.step(action_val)
     env.render()
+    if done:
+        env.reset()
 
     clock.tick(60)
 

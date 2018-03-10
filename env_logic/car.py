@@ -26,10 +26,8 @@ class Car(Actor):
         self.rotate_spr()
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
-    def bordercheck(self):
-        if self.rect.x < -16 or self.rect.x > 656 or self.rect.y < -16 or self.rect.y > 496:
-            pygame.display.quit()
-            pygame.quit()
+    def border_check(self):
+        return self.rect.x < -16 or self.rect.x > 656 or self.rect.y < -16 or self.rect.y > 496
 
     def update(self, action):
         if action == Action.STEER_LEFT:
@@ -56,6 +54,3 @@ class Car(Actor):
         angle_in_rad = math.radians(self.angle)
         self.rect.x += (self.speed * math.cos(angle_in_rad))
         self.rect.y -= (self.speed * math.sin(angle_in_rad))
-
-
-        self.bordercheck()
