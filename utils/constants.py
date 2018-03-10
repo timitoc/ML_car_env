@@ -16,3 +16,4 @@ class Action(Enum):
     BREAK = 5
     ACCELERATE_LEFT = 6
     ACCELERATE_RIGHT = 7
+    REVERSE = 8
