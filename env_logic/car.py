@@ -3,12 +3,10 @@ import math
 
 from actor import Actor
 from utils.constants import *
-from utils.point import Point
 
 
 class Car(Actor):
-    def __init__(self, position=Point(320, 240)):
-        super(Car, self).__init__(position)
+    def __init__(self):
         self.image = pygame.image.load('sprites/car.png').convert_alpha()
         self.original_image = self.image
         self.rect = self.image.get_rect()
@@ -27,6 +25,11 @@ class Car(Actor):
         super(Car, self).draw(screen)
         self.rotate_spr()
         screen.blit(self.image, (self.rect.x, self.rect.y))
+
+    def bordercheck(self):
+        if self.rect.x < -16 or self.rect.x > 656 or self.rect.y < -16 or self.rect.y > 496:
+            pygame.display.quit()
+            pygame.quit()
 
     def update(self, action):
         if action == Action.STEER_LEFT:
@@ -53,3 +56,6 @@ class Car(Actor):
         angle_in_rad = math.radians(self.angle)
         self.rect.x += (self.speed * math.cos(angle_in_rad))
         self.rect.y -= (self.speed * math.sin(angle_in_rad))
+
+
+        self.bordercheck()
