@@ -1,8 +1,11 @@
+from pygame import Rect
+
 class Scene:
     def __init__(self, screen):
         self.screen = screen
         self.actors = []
         self.car = None
+        self.parking_spots = []
         self.obstacles = []
 
     def draw(self):
@@ -20,6 +23,10 @@ class Scene:
         self.obstacles.append(obstacle)
         self.add_actor(obstacle)
 
+    def add_park(self, parking_spot):
+        self.parking_spots.append(parking_spot)
+        self.add_actor(parking_spot)
+
     def clear(self):
         self.car = None
         self.obstacles = []
@@ -36,6 +43,9 @@ class Scene:
         return 0.0
 
     def check_done(self):
+        for obstacle in self.obstacles:
+            if self.car.obstacle_check(obstacle) != None:
+                return True
         if self.car.border_check():
             return True
         return False

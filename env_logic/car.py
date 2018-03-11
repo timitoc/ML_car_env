@@ -4,7 +4,6 @@ import math
 from actor import Actor
 from utils.constants import *
 
-
 class Car(Actor):
     def __init__(self):
         self.image = pygame.image.load('sprites/car.png').convert_alpha()
@@ -14,12 +13,14 @@ class Car(Actor):
         self.turn_speed = 1
         self.angle = 0
         self.speed = 0
+        self.mask = pygame.mask.from_surface(self.image)
 
     def rotate_spr(self):
         oldcenter = self.rect.center
         self.image = pygame.transform.rotate(self.original_image, self.angle)
         self.rect = self.image.get_rect()
         self.rect.center = oldcenter
+        self.mask = pygame.mask.from_surface(self.image)
 
     def draw(self, screen):
         super(Car, self).draw(screen)
@@ -27,7 +28,14 @@ class Car(Actor):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
     def border_check(self):
-        return self.rect.x < -16 or self.rect.x > 656 or self.rect.y < -16 or self.rect.y > 496
+        return self.rect.x < -16 or self.rect.x > 1096 or self.rect.y < -16 or self.rect.y > 940
+
+    def obstacle_check(self, obstacle):
+        return pygame.sprite.collide_mask(self, obstacle)
+
+    def parked_check(self, parking_spot):
+        collision_mask =  pygame.sprite.collide_mask(self, parking_spot)
+        return collision_mask and self.rect.x > 900
 
     def update(self, action):
         if action == Action.STEER_LEFT:
@@ -35,11 +43,11 @@ class Car(Actor):
         elif action == Action.STEER_RIGHT:
             self.angle -= (self.turn_speed * self.speed) % 360
         elif action == Action.ACCELERATE:
-            if self.speed <= 5:
-                self.speed += 1
+            if self.speed < 6:
+                self.speed += 2
         elif action == Action.REVERSE:
-            if self.speed >= -3:
-                self.speed -= 1
+            if self.speed > -4:
+                self.speed -= 2
         elif action == Action.BREAK:
             self.speed = 0
         elif action == Action.ACCELERATE_RIGHT:

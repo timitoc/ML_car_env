@@ -2,12 +2,13 @@ import pygame
 
 from car import Car
 from obstacle import Obstacle
+from parking_spot import ParkingSpot
 from scene import Scene
 from utils.constants import *
 
 
 class Environment(object):
-    def __init__(self, size=[640, 480], enable_rendering=True):
+    def __init__(self, size=[1080, 960], enable_rendering=True):
         self.size = size
         self.enable_rendering = enable_rendering
         if enable_rendering:
@@ -30,6 +31,7 @@ class Environment(object):
 
     def reset(self):
         self.scene.clear()
+        self.scene.add_park(ParkingSpot(3))
         self.scene.set_car(Car())
         self.scene.add_obstacle(Obstacle(1))
         self.scene.add_obstacle(Obstacle(2))
