@@ -1,8 +1,4 @@
-from cmath import sqrt
-
-from pygame import Rect
-
-from utils.constants import TIME_STEP_PENALTY
+from utils.constants import *
 from utils.point import Point
 
 
@@ -18,6 +14,9 @@ class Scene:
     def draw(self):
         for actor in self.actors:
             actor.draw(self.screen)
+        # VISUAL DEBUG
+        # closest = self.closest_obstacle(self.car.get_actual_center())
+        # pygame.draw.circle(self.screen, GREEN, closest.to_tuple(), 5)
 
     def add_actor(self, actor):
         self.actors.append(actor)
@@ -75,7 +74,7 @@ class Scene:
         best = float("inf")
         who = source
         for obstacle in self.obstacles:
-            project = obstacle.distance_to(best)
+            project = obstacle.projection_to(source)
             if source.distance_to(project) < best:
                 best = source.distance_to(project)
                 who = project

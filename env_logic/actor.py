@@ -15,6 +15,13 @@ class Actor(object):
         x, y, w, h = self.rect
         return Point(x + w / 2, y + h / 2)
 
+    # Returns [corner points] in clockwise order from upper left
+    def get_corners(self):
+        x, y, w, h = self.rect
+        cx, cy = x + w / 2, y + h / 2
+        return [Point(cx-w/2, cy-h/2), Point(cx+w/2, cy-h/2),
+                Point(cx-w/2, cy+h/2), Point(cx+w/2, cy+h/2)]
+
     def draw(self, screen):
         pass
         # print ("Attempt to draw " + self.name)
