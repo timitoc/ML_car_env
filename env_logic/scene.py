@@ -1,3 +1,5 @@
+import pygame
+
 from utils.constants import *
 from utils.point import Point
 
@@ -16,7 +18,12 @@ class Scene:
             actor.draw(self.screen)
         # VISUAL DEBUG
         # closest = self.closest_obstacle(self.car.get_actual_center())
-        # pygame.draw.circle(self.screen, GREEN, closest.to_tuple(), 5)
+        # self.debug_circle(closest)
+        for corner in self.car.get_corners():
+            self.debug_circle(corner)
+
+    def debug_circle(self, point):
+        pygame.draw.circle(self.screen, GREEN, (int(point.x), int(point.y)), 5)
 
     def add_actor(self, actor):
         self.actors.append(actor)

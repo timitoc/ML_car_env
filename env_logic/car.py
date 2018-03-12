@@ -3,7 +3,7 @@ import math
 
 from actor import Actor
 from utils.constants import *
-from utils.point import Point
+from utils.point import Point, rotate
 
 
 class Car(Actor):
@@ -15,6 +15,13 @@ class Car(Actor):
         self.angle = 0
         self.speed = 0
         self.mask = pygame.mask.from_surface(self.image)
+
+    def get_corners(self):
+        cx, cy = self.get_actual_center().to_tuple()
+        _, _, w, h = self.original_image.get_rect()
+        simple_corners = [Point(cx - w / 2, cy - h / 2), Point(cx + w / 2, cy - h / 2),
+                          Point(cx + w / 2, cy + h / 2), Point(cx - w / 2, cy + h / 2)]
+        return rotate(simple_corners, Point(cx, cy), -math.radians(self.angle))
 
     def rotate_spr(self):
         oldcenter = self.rect.center
@@ -30,14 +37,14 @@ class Car(Actor):
 
     def border_check(self, bounds):
         x, y, w, h = self.rect
-        center_x, center_y = x + w/2, y+h/2
+        center_x, center_y = x + w / 2, y + h / 2
         return center_x < 0 or center_x > bounds[0] or center_y < 0 or center_y > bounds[1]
 
     def obstacle_check(self, obstacle):
         return pygame.sprite.collide_mask(self, obstacle)
 
     def parked_check(self, parking_spot):
-        collision_mask =  pygame.sprite.collide_mask(self, parking_spot)
+        collision_mask = pygame.sprite.collide_mask(self, parking_spot)
         return collision_mask and self.rect.x > 900
 
     def update(self, action):

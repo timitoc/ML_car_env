@@ -1,4 +1,6 @@
-from cmath import sqrt
+from cmath import sqrt, cos, sin
+
+import collections
 
 
 class Point(object):
@@ -28,8 +30,35 @@ class Point(object):
 
 def get_sp_point(a, b, c):
     x1, y1, x2, y2, x3, y3 = a.x, a.y, b.x, b.y, c.x, c.y
-    px, py = x2 - x1, y2 - y1
-    dab = px * px + py * py
-    u = ((x3 - x1) * px + (y3 - y1) * py) / dab
-    x, y = x1 + u * px, y1 + u * py
+    dx = x2 - x1
+    dy = y2 - y1
+    mag = sqrt(dx * dx + dy * dy).real
+    dx /= mag
+    dy /= mag
+    lamb = (dx * (x3 - x1)) + (dy * (y3 - y1))
+    x = (dx * lamb) + x1
+    y = (dy * lamb) + y1
     return Point(x, y)
+
+
+"""
+    Rotate a point counterclockwise by a given angle around a given origin.
+
+    The angle should be given in radians.
+"""
+
+
+def rotate(points, origin, angle):
+
+    if isinstance(points, collections.Sequence):
+        rez = []
+        for p in points:
+            rez.append(rotate(p, origin, angle))
+        return rez
+
+    ox, oy = origin.to_tuple()
+    px, py = points.to_tuple()
+
+    qx = ox + cos(angle) * (px - ox) - sin(angle) * (py - oy)
+    qy = oy + sin(angle) * (px - ox) + cos(angle) * (py - oy)
+    return Point(qx.real, qy.real)

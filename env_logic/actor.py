@@ -20,7 +20,7 @@ class Actor(object):
         x, y, w, h = self.rect
         cx, cy = x + w / 2, y + h / 2
         return [Point(cx-w/2, cy-h/2), Point(cx+w/2, cy-h/2),
-                Point(cx-w/2, cy+h/2), Point(cx+w/2, cy+h/2)]
+                Point(cx+w/2, cy+h/2), Point(cx-w/2, cy+h/2)]
 
     def draw(self, screen):
         pass
