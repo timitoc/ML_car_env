@@ -1,4 +1,10 @@
+from cmath import sqrt
+
 from pygame import Rect
+
+from utils.constants import TIME_STEP_PENALTY
+from utils.point import Point
+
 
 class Scene:
     def __init__(self, screen, size):
@@ -37,15 +43,22 @@ class Scene:
         for actor in self.actors:
             actor.update(action)
 
+    def get_distance_to_goal(self):
+        x, y, w, h = self.car.rect
+        car_center = Point(x + w / 2, y + h / 2)
+        x, y, w, h = self.parking_spots[0].rect
+        park_center = Point(x + w / 2, y + h / 2)
+        return car_center.distance_to(park_center)
+
     def get_observation(self):
         return []
 
-    def get_reward(self):
-        return 0.0
+    def get_reward(self, initial_distance):
+        return TIME_STEP_PENALTY + (initial_distance - self.get_distance_to_goal()) / initial_distance
 
     def check_done(self):
         for obstacle in self.obstacles:
-            if self.car.obstacle_check(obstacle) != None:
+            if self.car.obstacle_check(obstacle) is not None:
                 return True
         if self.car.border_check(self.size):
             return True

@@ -6,6 +6,8 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
+TIME_STEP_PENALTY = -1
+
 
 class Action(Enum):
     NOTHING = 0

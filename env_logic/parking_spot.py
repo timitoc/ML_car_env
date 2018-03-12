@@ -2,6 +2,7 @@ import pygame
 
 from actor import Actor
 
+
 class ParkingSpot(Actor):
     def __init__(self, position):
         self.image = pygame.image.load('sprites/park.png').convert_alpha()

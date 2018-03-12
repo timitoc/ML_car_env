@@ -12,6 +12,7 @@ class Environment(object):
     def __init__(self, size=[720, 420], enable_rendering=True):
         self.size = size
         self.enable_rendering = enable_rendering
+        self.initial_distance = None
         if enable_rendering:
             pygame.init()
             self.screen = pygame.display.set_mode(size)
@@ -25,7 +26,7 @@ class Environment(object):
     def step(self, action_value):
         self.scene.update(Action(action_value))
         observation = self.scene.get_observation()
-        reward = self.scene.get_reward()
+        reward = self.scene.get_reward(self.initial_distance)
         done = self.scene.check_done()
         info = self.scene.get_auxiliar_info()
         return observation, reward, done, info
@@ -37,6 +38,7 @@ class Environment(object):
         self.scene.add_obstacle(Obstacle(Point(25, 350)))
         self.scene.add_obstacle(Obstacle(Point(200, 350)))
         self.scene.add_obstacle(Obstacle(Point(600, 350)))
+        self.initial_distance = self.scene.get_distance_to_goal()
         return self.scene.get_observation()
 
     def render(self):
