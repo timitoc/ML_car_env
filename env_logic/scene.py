@@ -1,8 +1,9 @@
 from pygame import Rect
 
 class Scene:
-    def __init__(self, screen):
+    def __init__(self, screen, size):
         self.screen = screen
+        self.size = size
         self.actors = []
         self.car = None
         self.parking_spots = []
@@ -46,7 +47,7 @@ class Scene:
         for obstacle in self.obstacles:
             if self.car.obstacle_check(obstacle) != None:
                 return True
-        if self.car.border_check():
+        if self.car.border_check(self.size):
             return True
         return False
 

@@ -27,8 +27,10 @@ class Car(Actor):
         self.rotate_spr()
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
-    def border_check(self):
-        return self.rect.x < -16 or self.rect.x > 1096 or self.rect.y < -16 or self.rect.y > 940
+    def border_check(self, bounds):
+        x, y, w, h = self.rect
+        center_x, center_y = x + w/2, y+h/2
+        return center_x < 0 or center_x > bounds[0] or center_y < 0 or center_y > bounds[1]
 
     def obstacle_check(self, obstacle):
         return pygame.sprite.collide_mask(self, obstacle)

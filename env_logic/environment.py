@@ -5,21 +5,22 @@ from obstacle import Obstacle
 from parking_spot import ParkingSpot
 from scene import Scene
 from utils.constants import *
+from utils.point import Point
 
 
 class Environment(object):
-    def __init__(self, size=[1080, 960], enable_rendering=True):
+    def __init__(self, size=[720, 420], enable_rendering=True):
         self.size = size
         self.enable_rendering = enable_rendering
         if enable_rendering:
             pygame.init()
             self.screen = pygame.display.set_mode(size)
             pygame.display.set_caption("Car parking simulator")
-            self.scene = Scene(self.screen)
+            self.scene = Scene(self.screen, self.size)
         else:
-            self.scene = Scene(None)
+            self.scene = Scene(None, self.size)
         self.reset()
-        pygame.mouse.set_visible(0)
+        # pygame.mouse.set_visible(0)
 
     def step(self, action_value):
         self.scene.update(Action(action_value))
@@ -31,11 +32,11 @@ class Environment(object):
 
     def reset(self):
         self.scene.clear()
-        self.scene.add_park(ParkingSpot(3))
+        self.scene.add_park(ParkingSpot(Point(350, 350)))
         self.scene.set_car(Car())
-        self.scene.add_obstacle(Obstacle(1))
-        self.scene.add_obstacle(Obstacle(2))
-        self.scene.add_obstacle(Obstacle(4))
+        self.scene.add_obstacle(Obstacle(Point(25, 350)))
+        self.scene.add_obstacle(Obstacle(Point(200, 350)))
+        self.scene.add_obstacle(Obstacle(Point(600, 350)))
         return self.scene.get_observation()
 
     def render(self):

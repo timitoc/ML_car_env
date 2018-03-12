@@ -3,11 +3,11 @@ import pygame
 from actor import Actor
 
 class Obstacle(Actor):
-    def __init__(self, index=1):
+    def __init__(self, position):
         self.image = pygame.image.load('sprites/obstacle.png').convert_alpha()
         self.rect = self.image.get_rect()
-        self.rect.x = index * self.rect.width + 32 * index
-        self.rect.y = 900
+        self.rect.x = position.x
+        self.rect.y = position.y
         self.mask = pygame.mask.from_surface(self.image)
 
     def draw(self, screen):

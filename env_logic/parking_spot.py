@@ -3,11 +3,11 @@ import pygame
 from actor import Actor
 
 class ParkingSpot(Actor):
-    def __init__(self, index):
+    def __init__(self, position):
         self.image = pygame.image.load('sprites/park.png').convert_alpha()
         self.rect = self.image.get_rect()
-        self.rect.x = index * (self.rect.width - 35) + 32 * (index - 1)
-        self.rect.y = 900
+        self.rect.x = position.x
+        self.rect.y = position.y
         self.mask = pygame.mask.from_surface(self.image)
 
     def draw(self, screen):
