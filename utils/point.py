@@ -9,5 +9,14 @@ class Point(object):
     def __str__(self):
         return "({0}, {1})".format(self.x, self.y)
 
+    def to_tuple(self):
+        return self.x, self.y
+
     def distance_to(self, other):
         return (sqrt((self.x - other.x) * (self.x - other.x) + (self.y - other.y) * (self.y - other.y))).real
+
+    def __add__(self, other):
+        return Point(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return Point(self.x - other.x, self.y - other.y)

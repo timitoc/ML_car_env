@@ -50,8 +50,21 @@ class Scene:
         park_center = Point(x + w / 2, y + h / 2)
         return car_center.distance_to(park_center)
 
+    """
+        Returns an array describing the state as:
+        [0]: float -> car angle
+        [1]: float -> car speed
+        [2], [3]: float, float -> car x, y position
+        [4], [5]: float, float -> vector from upper left corner to closest obstacle
+        [6], [7]: float, float -> vector from upper right corner to closest obstacle
+        [8], [9]: float, float -> vector from lower left corner to closest obstacle
+        [10], [11]: float, float -> vector from lower right corner to closest obstacle
+        [12], [13]: float, float -> vector from car center to goal center
+    """
     def get_observation(self):
-        return []
+        return [self.car.angle,
+                self.car.speed,
+                self.car.get_actual_center().x, self.car.get_actual_center().y]
 
     def get_reward(self, initial_distance):
         return TIME_STEP_PENALTY + (initial_distance - self.get_distance_to_goal()) / initial_distance

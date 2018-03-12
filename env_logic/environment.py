@@ -29,6 +29,7 @@ class Environment(object):
         reward = self.scene.get_reward(self.initial_distance)
         done = self.scene.check_done()
         info = self.scene.get_auxiliar_info()
+        print observation
         return observation, reward, done, info
 
     def reset(self):

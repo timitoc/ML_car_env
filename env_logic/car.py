@@ -3,6 +3,8 @@ import math
 
 from actor import Actor
 from utils.constants import *
+from utils.point import Point
+
 
 class Car(Actor):
     def __init__(self):
@@ -14,6 +16,10 @@ class Car(Actor):
         self.angle = 0
         self.speed = 0
         self.mask = pygame.mask.from_surface(self.image)
+
+    def get_actual_center(self):
+        x, y, w, h = self.rect
+        return Point(x + w / 2, y + h / 2)
 
     def rotate_spr(self):
         oldcenter = self.rect.center
