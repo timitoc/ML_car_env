@@ -63,15 +63,25 @@ class Scene:
         [2], [3]: float, float -> car x, y position
         [4], [5]: float, float -> vector from upper left corner to closest obstacle
         [6], [7]: float, float -> vector from upper right corner to closest obstacle
-        [8], [9]: float, float -> vector from lower left corner to closest obstacle
-        [10], [11]: float, float -> vector from lower right corner to closest obstacle
+        [8], [9]: float, float -> vector from lower right corner to closest obstacle
+        [10], [11]: float, float -> vector from lower left corner to closest obstacle
         [12], [13]: float, float -> vector from car center to goal center
     """
 
     def get_observation(self):
+        closely = []
+        for corner in self.car.get_corners():
+            closely.append(corner - self.closest_obstacle(corner))
+        car_center = self.car.get_actual_center()
+        to_goal = car_center - self.parking_spots[0].get_actual_center()
         return [self.car.angle,
                 self.car.speed,
-                self.car.get_actual_center().x, self.car.get_actual_center().y]
+                car_center.x, car_center.y,
+                closely[0].x, closely[0].y,
+                closely[1].x, closely[1].y,
+                closely[2].x, closely[2].y,
+                closely[3].x, closely[3].y,
+                to_goal.x, to_goal.y]
 
     """
         Returns a vector(as a point) towards the point from an obstacle closest to the source
