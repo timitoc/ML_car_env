@@ -7,19 +7,14 @@ from utils.point import Point
 
 
 class Car(Actor):
-    def __init__(self):
-        self.image = pygame.image.load('sprites/car.png').convert_alpha()
+    def __init__(self, position=(320, 240)):
+        super(Car, self).__init__(position, 'car.png')
         self.original_image = self.image
-        self.rect = self.image.get_rect()
-        self.rect.center = (320, 240)
+        self.rect.center = position
         self.turn_speed = 1
         self.angle = 0
         self.speed = 0
         self.mask = pygame.mask.from_surface(self.image)
-
-    def get_actual_center(self):
-        x, y, w, h = self.rect
-        return Point(x + w / 2, y + h / 2)
 
     def rotate_spr(self):
         oldcenter = self.rect.center

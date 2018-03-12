@@ -61,10 +61,25 @@ class Scene:
         [10], [11]: float, float -> vector from lower right corner to closest obstacle
         [12], [13]: float, float -> vector from car center to goal center
     """
+
     def get_observation(self):
         return [self.car.angle,
                 self.car.speed,
                 self.car.get_actual_center().x, self.car.get_actual_center().y]
+
+    """
+        Returns a vector(as a point) towards the point from an obstacle closest to the source
+    """
+
+    def closest_obstacle(self, source):
+        best = float("inf")
+        who = source
+        for obstacle in self.obstacles:
+            project = obstacle.distance_to(best)
+            if source.distance_to(project) < best:
+                best = source.distance_to(project)
+                who = project
+        return who
 
     def get_reward(self, initial_distance):
         return TIME_STEP_PENALTY + (initial_distance - self.get_distance_to_goal()) / initial_distance
