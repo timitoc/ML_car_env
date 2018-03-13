@@ -98,13 +98,32 @@ class Scene:
         return who
 
     def get_reward(self, initial_distance):
+        if self.car_hit_obstacle():
+            return HIT_PENALITY
+        if self.car_reached_goal():
+            return GOAL_REWARD
         return TIME_STEP_PENALTY + (initial_distance - self.get_distance_to_goal()) / initial_distance
 
-    def check_done(self):
+    def car_hit_obstacle(self):
         for obstacle in self.obstacles:
             if self.car.obstacle_check(obstacle) is not None:
                 return True
         if self.car.border_check(self.size):
+            return True
+
+    def car_reached_goal(self):
+        goal_point = self.parking_spots[0].get_actual_center()
+        car_point = self.car.get_actual_center()
+        distance_left = car_point.distance_to(goal_point)
+        # print distance_left
+        return distance_left < GOAL_DISTANCE_MARGIN
+
+    def check_done(self, current_frame):
+        if self.car_hit_obstacle():
+            return True
+        if self.car_reached_goal():
+            return True
+        if current_frame >= FRAME_LIMIT:
             return True
         return False
 
