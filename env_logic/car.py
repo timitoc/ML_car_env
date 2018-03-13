@@ -1,24 +1,30 @@
 import pygame
 import math
 
+
 from actor import Actor
 from utils.constants import *
 from utils.point import Point, rotate
 
+def sgn(number):
+    if number < 0:
+        return -1
+    return 1
 
 class Car(Actor):
     def __init__(self, position=(320, 240)):
         super(Car, self).__init__(position, 'car.png')
         self.original_image = self.image
-        self.rect.center = position
-        self.turn_speed = 1
-        self.angle = 0
-        self.speed = 0
+        self.upperleft = Point(position[0] - 32, position[1] - 64)
+        self.rect = self.image.get_rect(x=self.upperleft.x, y=self.upperleft.y)
+        self.turn_speed = 0.4
+        self.angle = 0.0
+        self.speed = 0.0
         self.mask = pygame.mask.from_surface(self.image)
 
     def get_corners(self):
         cx, cy = self.get_actual_center().to_tuple()
-        _, _, w, h = self.original_image.get_rect()
+        _, _, w, h = self.original_image.get_rect(x=self.upperleft.x, y=self.upperleft.y)
         simple_corners = [Point(cx - w / 2, cy - h / 2), Point(cx + w / 2, cy - h / 2),
                           Point(cx + w / 2, cy + h / 2), Point(cx - w / 2, cy + h / 2)]
         return rotate(simple_corners, Point(cx, cy), -math.radians(self.angle))
@@ -26,14 +32,14 @@ class Car(Actor):
     def rotate_spr(self):
         oldcenter = self.rect.center
         self.image = pygame.transform.rotate(self.original_image, self.angle)
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect(x=self.upperleft.x, y=self.upperleft.y)
         self.rect.center = oldcenter
         self.mask = pygame.mask.from_surface(self.image)
 
     def draw(self, screen):
         super(Car, self).draw(screen)
         self.rotate_spr()
-        screen.blit(self.image, (self.rect.x, self.rect.y))
+        screen.blit(self.image, (self.upperleft.x, self.upperleft.y))
 
     def border_check(self, bounds):
         x, y, w, h = self.rect
@@ -45,30 +51,39 @@ class Car(Actor):
 
     def parked_check(self, parking_spot):
         collision_mask = pygame.sprite.collide_mask(self, parking_spot)
-        return collision_mask and self.rect.x > 900
+        return collision_mask and self.realcenter.distance_to(parking_spot.get_actual_center()) < 10 \
+            and self.angle < 20 and self.angle > 340
 
     def update(self, action):
         if action == Action.STEER_LEFT:
-            self.angle += (self.turn_speed * self.speed) % 360
+            self.angle += (self.turn_speed * self.speed)
         elif action == Action.STEER_RIGHT:
-            self.angle -= (self.turn_speed * self.speed) % 360
+            self.angle -= (self.turn_speed * self.speed)
         elif action == Action.ACCELERATE:
-            if self.speed < 6:
+            if self.speed < 4:
                 self.speed += 2
         elif action == Action.REVERSE:
             if self.speed > -4:
                 self.speed -= 2
         elif action == Action.BREAK:
-            self.speed = 0
+            if self.speed != 0:
+                self.speed += (-2 * sgn(self.speed))
         elif action == Action.ACCELERATE_RIGHT:
-            if self.speed <= 5:
-                self.speed += 1
-            self.angle -= (self.turn_speed * self.speed) % 360
+            if self.speed <= 4:
+                self.speed += 2
+            self.angle -= (self.turn_speed * self.speed)
         elif action == Action.ACCELERATE_LEFT:
-            if self.speed <= 5:
-                self.speed += 1
-            self.angle += (self.turn_speed * self.speed) % 360
+            if self.speed <= 4:
+                self.speed += 2
+            self.angle += (self.turn_speed * self.speed)
 
-        angle_in_rad = math.radians(self.angle)
-        self.rect.x += (self.speed * math.cos(angle_in_rad))
-        self.rect.y -= (self.speed * math.sin(angle_in_rad))
+        angle_in_rad = math.radians(float(self.angle))
+
+        cos_of_angle = math.cos(angle_in_rad)
+        sin_of_angle = math.sin(angle_in_rad)
+
+        to_move_x = self.speed * cos_of_angle
+        to_move_y = self.speed * sin_of_angle
+
+        self.upperleft.x += to_move_x
+        self.upperleft.y -= to_move_y
