@@ -15,8 +15,8 @@ class Car(Actor):
     def __init__(self, position=(320, 240)):
         super(Car, self).__init__(position, 'car.png')
         self.original_image = self.image
-        self.upperleft = Point(position[0] - 32, position[1] - 64)
-        self.rect = self.image.get_rect(x=self.upperleft.x, y=self.upperleft.y)
+        self.rect = self.image.get_rect()
+        self.realcentx, self.realcenty = self.rect.centerx, self.rect.centery
         self.turn_speed = 0.4
         self.angle = 0.0
         self.speed = 0.0
@@ -24,22 +24,22 @@ class Car(Actor):
 
     def get_corners(self):
         cx, cy = self.get_actual_center().to_tuple()
-        _, _, w, h = self.original_image.get_rect(x=self.upperleft.x, y=self.upperleft.y)
+        _, _, w, h = self.original_image.get_rect()
         simple_corners = [Point(cx - w / 2, cy - h / 2), Point(cx + w / 2, cy - h / 2),
                           Point(cx + w / 2, cy + h / 2), Point(cx - w / 2, cy + h / 2)]
         return rotate(simple_corners, Point(cx, cy), -math.radians(self.angle))
 
     def rotate_spr(self):
-        oldcenter = self.rect.center
         self.image = pygame.transform.rotate(self.original_image, self.angle)
-        self.rect = self.image.get_rect(x=self.upperleft.x, y=self.upperleft.y)
-        self.rect.center = oldcenter
+        oldcenx, oldceny = self.realcentx, self.realcenty
+        self.rect = self.image.get_rect()
+        self.rect.centerx, self.rect.centery = oldcenx, oldceny
         self.mask = pygame.mask.from_surface(self.image)
 
     def draw(self, screen):
         super(Car, self).draw(screen)
         self.rotate_spr()
-        screen.blit(self.image, (self.upperleft.x, self.upperleft.y))
+        screen.blit(self.image, (self.rect.x, self.rect.y))
 
     def border_check(self, bounds):
         x, y, w, h = self.rect
@@ -61,21 +61,23 @@ class Car(Actor):
             self.angle -= (self.turn_speed * self.speed)
         elif action == Action.ACCELERATE:
             if self.speed < 4:
-                self.speed += 2
+                self.speed += 0.4
         elif action == Action.REVERSE:
             if self.speed > -4:
-                self.speed -= 2
+                self.speed -= 0.4
         elif action == Action.BREAK:
             if self.speed != 0:
-                self.speed += (-2 * sgn(self.speed))
+                self.speed += (-0.8 * sgn(self.speed))
         elif action == Action.ACCELERATE_RIGHT:
             if self.speed <= 4:
-                self.speed += 2
+                self.speed += 0.4
             self.angle -= (self.turn_speed * self.speed)
         elif action == Action.ACCELERATE_LEFT:
             if self.speed <= 4:
-                self.speed += 2
+                self.speed += 0.4
             self.angle += (self.turn_speed * self.speed)
+        if math.fabs(self.speed) < 0.4:
+            self.speed = 0
 
         angle_in_rad = math.radians(float(self.angle))
 
@@ -85,5 +87,5 @@ class Car(Actor):
         to_move_x = self.speed * cos_of_angle
         to_move_y = self.speed * sin_of_angle
 
-        self.upperleft.x += to_move_x
-        self.upperleft.y -= to_move_y
+        self.realcentx += to_move_x
+        self.realcenty -= to_move_y
