@@ -14,9 +14,9 @@ class Environment(object):
         self.size = size
         self.enable_rendering = enable_rendering
         self.initial_distance = None
+        pygame.init()
+        self.screen = pygame.display.set_mode(size)
         if enable_rendering:
-            pygame.init()
-            self.screen = pygame.display.set_mode(size)
             pygame.display.set_caption("Car parking simulator")
             self.scene = Scene(self.screen, self.size)
         else:
@@ -27,10 +27,9 @@ class Environment(object):
     def step(self, action_value):
         self.scene.update(Action(action_value))
         observation = self.scene.get_observation()
-        reward = self.scene.get_reward(self.initial_distance)
+        reward = self.scene.get_reward(self.initial_distance, self.current_frame)
         done = self.scene.check_done(self.current_frame)
         info = self.scene.get_auxiliar_info()
-        # print observation
         self.current_frame += 1
         # print "Reward ", reward, " on frame ", self.current_frame
         return observation, reward, done, info

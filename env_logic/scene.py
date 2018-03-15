@@ -76,12 +76,13 @@ class Scene:
         to_goal = car_center - self.parking_spots[0].get_actual_center()
         return [self.car.angle,
                 self.car.speed,
-                car_center.x, car_center.y,
-                closely[0].x, closely[0].y,
-                closely[1].x, closely[1].y,
-                closely[2].x, closely[2].y,
-                closely[3].x, closely[3].y,
-                to_goal.x, to_goal.y]
+                car_center.x, car_center.y
+                # closely[0].x, closely[0].y,
+                # closely[1].x, closely[1].y,
+                # closely[2].x, closely[2].y,
+                # closely[3].x, closely[3].y,
+                # to_goal.x, to_goal.y
+                ]
 
     """
         Returns a vector(as a point) towards the point from an obstacle closest to the source
@@ -97,17 +98,19 @@ class Scene:
                 who = project
         return who
 
-    def get_reward(self, initial_distance):
+    def get_reward(self, initial_distance, current_frame):
         if self.car_hit_obstacle():
-            return HIT_PENALITY
+            return HIT_PENALTY
+        if current_frame >= FRAME_LIMIT:
+            return FORFEIT_PENALTY
         if self.car_reached_goal():
             return GOAL_REWARD
-        return TIME_STEP_PENALTY + (initial_distance - self.get_distance_to_goal()) / initial_distance
+        return TIME_STEP_PENALTY + 1.0/5 * (initial_distance - self.get_distance_to_goal()) / initial_distance
 
     def car_hit_obstacle(self):
-        for obstacle in self.obstacles:
-            if self.car.obstacle_check(obstacle) is not None:
-                return True
+        # for obstacle in self.obstacles:
+        #     if self.car.obstacle_check(obstacle) is not None:
+        #         return True
         if self.car.border_check(self.size):
             return True
 
