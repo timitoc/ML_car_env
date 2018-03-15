@@ -1,3 +1,5 @@
+from cmath import log
+
 import pygame
 
 from utils.constants import *
@@ -76,7 +78,7 @@ class Scene:
         to_goal = car_center - self.parking_spots[0].get_actual_center()
         return [self.car.angle,
                 self.car.speed,
-                car_center.x, car_center.y
+                float(car_center.x) / self.size[0], float(car_center.y) / self.size[1]
                 # closely[0].x, closely[0].y,
                 # closely[1].x, closely[1].y,
                 # closely[2].x, closely[2].y,
@@ -105,12 +107,13 @@ class Scene:
             return FORFEIT_PENALTY
         if self.car_reached_goal():
             return GOAL_REWARD
-        return TIME_STEP_PENALTY + 1.0/5 * (initial_distance - self.get_distance_to_goal()) / initial_distance
+        return -log(self.get_distance_to_goal() / initial_distance).real
+        # return TIME_STEP_PENALTY + 1.0/5 * (initial_distance - self.get_distance_to_goal()) / initial_distance
 
     def car_hit_obstacle(self):
-        # for obstacle in self.obstacles:
-        #     if self.car.obstacle_check(obstacle) is not None:
-        #         return True
+        for obstacle in self.obstacles:
+            if self.car.obstacle_check(obstacle) is not None:
+                return True
         if self.car.border_check(self.size):
             return True
 
@@ -124,8 +127,8 @@ class Scene:
     def check_done(self, current_frame):
         if self.car_hit_obstacle():
             return True
-        if self.car_reached_goal():
-            return True
+        # if self.car_reached_goal():
+        #     return True
         if current_frame >= FRAME_LIMIT:
             return True
         return False

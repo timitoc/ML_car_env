@@ -32,6 +32,7 @@ class Environment(object):
         info = self.scene.get_auxiliar_info()
         self.current_frame += 1
         # print "Reward ", reward, " on frame ", self.current_frame
+        # print observation
         return observation, reward, done, info
 
     def reset(self):

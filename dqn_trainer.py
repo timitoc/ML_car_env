@@ -45,7 +45,7 @@ nb_actions = env.action_space.n
 # Also, you can build a dueling network by yourself and turn off the dueling network in DQN.
 model = Sequential()
 model.add(Flatten(input_shape=(1,) + env.observation_space.shape))
-model.add(Dense(128))
+model.add(Dense(256))
 model.add(Activation('relu'))
 model.add(Dense(128))
 model.add(Activation('relu'))
@@ -66,7 +66,7 @@ policy = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=1., valu
 #               enable_dueling_network=True, dueling_type='avg', target_model_update=1e-2, policy=policy)
 dqn = DQNAgent(model=model, nb_actions=nb_actions, memory=memory, nb_steps_warmup=10,
                enable_dueling_network=True, dueling_type='avg', target_model_update=1e-2, policy=policy)
-dqn.compile(Adam(lr=0.00025, ), metrics=['mae'])
+dqn.compile(Adam(lr=0.0005, ), metrics=['mae'])
 
 # Okay, now it's time to learn something! We visualize the training here for show, but this
 # slows down training quite a lot. You can always safely abort the training prematurely using
