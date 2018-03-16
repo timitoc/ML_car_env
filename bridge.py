@@ -16,7 +16,7 @@ class EnvironmentWrapper(Env):
         # self.action_space = self.env.action_space
         low = np.array([
             0,
-            -8,
+            -1,
             0, 0,
             0, 0,
             0, 0,
@@ -30,8 +30,8 @@ class EnvironmentWrapper(Env):
             # -self.env.size[0], -self.env.size[1],
         ])
         high = np.array([
-            360,
-            8,
+            1,
+            1,
             1, 1,
             1, 1,
             1, 1,

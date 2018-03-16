@@ -76,8 +76,8 @@ class Scene:
             closely.append(corner - self.closest_obstacle(corner))
         car_center = self.car.get_actual_center()
         to_goal = car_center - self.parking_spots[0].get_actual_center()
-        return [self.car.angle,
-                self.car.speed,
+        return [float(self.car.angle) / 360,
+                float(self.car.speed) / 6,
                 float(car_center.x) / self.size[0], float(car_center.y) / self.size[1],
                 float(closely[0].x) / self.size[0], float(closely[0].y) / self.size[1],
                 float(closely[1].x) / self.size[0], float(closely[1].y) / self.size[1],
