@@ -17,6 +17,11 @@ class EnvironmentWrapper(Env):
         low = np.array([
             0,
             -8,
+            0, 0,
+            0, 0,
+            0, 0,
+            0, 0,
+            0, 0,
             0, 0
             # -self.env.size[0], self.env.size[1],
             # -self.env.size[0], -self.env.size[1],
@@ -27,6 +32,11 @@ class EnvironmentWrapper(Env):
         high = np.array([
             360,
             8,
+            1, 1,
+            1, 1,
+            1, 1,
+            1, 1,
+            1, 1,
             1, 1
             # self.env.size[0], self.env.size[1],
             # self.env.size[0], self.env.size[1],

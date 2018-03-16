@@ -78,12 +78,12 @@ class Scene:
         to_goal = car_center - self.parking_spots[0].get_actual_center()
         return [self.car.angle,
                 self.car.speed,
-                float(car_center.x) / self.size[0], float(car_center.y) / self.size[1]
-                # closely[0].x, closely[0].y,
-                # closely[1].x, closely[1].y,
-                # closely[2].x, closely[2].y,
-                # closely[3].x, closely[3].y,
-                # to_goal.x, to_goal.y
+                float(car_center.x) / self.size[0], float(car_center.y) / self.size[1],
+                float(closely[0].x) / self.size[0], float(closely[0].y) / self.size[1],
+                float(closely[1].x) / self.size[0], float(closely[1].y) / self.size[1],
+                float(closely[2].x) / self.size[0], float(closely[2].y) / self.size[1],
+                float(closely[3].x) / self.size[0], float(closely[3].y) / self.size[1],
+                to_goal.x / self.size[0], to_goal.y / self.size[1]
                 ]
 
     """
