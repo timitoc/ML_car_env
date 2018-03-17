@@ -110,7 +110,7 @@ class Scene:
         # print self.car.angle, " ", -log(float(self.car.angle)/360 + 0.001).real
         angle_def = 1 - (self.car.angle if self.car.angle < 180 else 360 - self.car.angle) / 180
         distance_rew = -log(max(self.get_distance_to_goal() / initial_distance, 0.000045)).real
-        angle_rew = distance_rew * angle_def
+        angle_rew = distance_rew * angle_def * angle_def
         return angle_rew
         # return TIME_STEP_PENALTY + 1.0/5 * (initial_distance - self.get_distance_to_goal()) / initial_distance
 
