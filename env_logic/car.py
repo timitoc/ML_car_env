@@ -49,9 +49,9 @@ class Car(Actor):
 
     def update(self, action):
         if action == Action.STEER_LEFT:
-            self.angle += (self.turn_speed * self.speed) % 360
+            self.angle = (self.angle + self.turn_speed * self.speed) % 360
         elif action == Action.STEER_RIGHT:
-            self.angle -= (self.turn_speed * self.speed) % 360
+            self.angle = (self.angle - self.turn_speed * self.speed) % 360
         elif action == Action.ACCELERATE:
             if self.speed < 6:
                 self.speed += 1
@@ -63,11 +63,11 @@ class Car(Actor):
         elif action == Action.ACCELERATE_RIGHT:
             if self.speed <= 5:
                 self.speed += 1
-            self.angle -= (self.turn_speed * self.speed) % 360
+            self.angle = (self.angle - self.turn_speed * self.speed) % 360
         elif action == Action.ACCELERATE_LEFT:
             if self.speed <= 5:
                 self.speed += 1
-            self.angle += (self.turn_speed * self.speed) % 360
+            self.angle = (self.angle + self.turn_speed * self.speed) % 360
 
         angle_in_rad = math.radians(self.angle)
         self.rect.x += (self.speed * math.cos(angle_in_rad))

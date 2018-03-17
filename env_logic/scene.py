@@ -107,7 +107,11 @@ class Scene:
             return FORFEIT_PENALTY
         if self.car_reached_goal():
             return GOAL_REWARD
-        return -log(self.get_distance_to_goal() / initial_distance).real
+        # print self.car.angle, " ", -log(float(self.car.angle)/360 + 0.001).real
+        angle_def = 1 - (self.car.angle if self.car.angle < 180 else 360 - self.car.angle) / 180
+        distance_rew = -log(max(self.get_distance_to_goal() / initial_distance, 0.000045)).real
+        angle_rew = distance_rew * angle_def
+        return angle_rew
         # return TIME_STEP_PENALTY + 1.0/5 * (initial_distance - self.get_distance_to_goal()) / initial_distance
 
     def car_hit_obstacle(self):
@@ -122,7 +126,8 @@ class Scene:
         car_point = self.car.get_actual_center()
         distance_left = car_point.distance_to(goal_point)
         # print distance_left
-        return distance_left < GOAL_DISTANCE_MARGIN
+        good_angle = (340 < self.car.angle < 360 or 0 < self.car.angle < 20)
+        return distance_left < GOAL_DISTANCE_MARGIN and good_angle
 
     def check_done(self, current_frame):
         if self.car_hit_obstacle():

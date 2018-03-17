@@ -9,10 +9,11 @@ from keras.optimizers import Adam, Adadelta
 
 from rl.agents.dqn import DQNAgent
 from rl.callbacks import Callback
-from rl.policy import BoltzmannQPolicy, LinearAnnealedPolicy, EpsGreedyQPolicy
+from rl.policy import BoltzmannQPolicy, LinearAnnealedPolicy, EpsGreedyQPolicy, MaxBoltzmannQPolicy
 from rl.memory import SequentialMemory
 
 from bridge import EnvironmentWrapper
+from epsStochastic import EpsStochasticPolicy
 
 
 class TestLogger(Callback):
@@ -51,21 +52,24 @@ model.add(Dense(128))
 model.add(Activation('relu'))
 model.add(Dense(128))
 model.add(Activation('relu'))
-model.add(Dense(nb_actions, activation='softmax'))
+model.add(Dense(nb_actions))
+model.add(Activation('softmax'))
 print(model.summary())
 
 # Finally, we configure and compile our agent. You can use every built-in Keras optimizer and
 # even the metrics!
 memory = SequentialMemory(limit=100000, window_length=1)
 # policy = BoltzmannQPolicy()
-policy = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=1., value_min=.1, value_test=.05,
+policy = LinearAnnealedPolicy(MaxBoltzmannQPolicy(), attr='eps', value_max=1., value_min=.1, value_test=.05,
                               nb_steps=20000)
+test_policy = MaxBoltzmannQPolicy(eps=0.1)
 # enable the dueling network
 # you can specify the dueling_type to one of {'avg','max','naive'}
 # dqn = DQNAgent(model=model, nb_actions=nb_actions, memory=memory, nb_steps_warmup=200,
 #               enable_dueling_network=True, dueling_type='avg', target_model_update=1e-2, policy=policy)
 dqn = DQNAgent(model=model, nb_actions=nb_actions, memory=memory, nb_steps_warmup=10,
-               enable_dueling_network=True, dueling_type='avg', target_model_update=1e-2, policy=policy)
+               enable_dueling_network=True, dueling_type='avg', target_model_update=1e-2,
+               policy=policy, test_policy=test_policy)
 dqn.compile(Adam(lr=0.0005, ), metrics=['mae'])
 
 # Okay, now it's time to learn something! We visualize the training here for show, but this
