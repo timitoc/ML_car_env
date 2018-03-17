@@ -100,6 +100,9 @@ ENV/
 # mypy
 .mypy_cache/
 
+#h5f files
+*.h5f
+
 # User-specific stuff:
 .idea/**/workspace.xml
 .idea/**/tasks.xml

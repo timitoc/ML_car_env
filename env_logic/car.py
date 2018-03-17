@@ -65,6 +65,7 @@ class Car(Actor):
         elif action == Action.REVERSE:
             if self.speed > -4:
                 self.speed -= 0.4
+
         elif action == Action.BREAK:
             if self.speed != 0:
                 self.speed += (-0.8 * sgn(self.speed))
@@ -79,6 +80,8 @@ class Car(Actor):
         if math.fabs(self.speed) < 0.4:
             self.speed = 0
 
+        self.angle %= 360
+
         angle_in_rad = math.radians(float(self.angle))
 
         cos_of_angle = math.cos(angle_in_rad)
@@ -89,3 +92,4 @@ class Car(Actor):
 
         self.realcentx += to_move_x
         self.realcenty -= to_move_y
+
