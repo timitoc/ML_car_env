@@ -1,22 +1,23 @@
 import pygame
 import math
 
-
 from actor import Actor
 from utils.constants import *
 from utils.point import Point, rotate
+
 
 def sgn(number):
     if number < 0:
         return -1
     return 1
 
+
 class Car(Actor):
-    def __init__(self, position=(320, 240)):
+    def __init__(self, position=(0, 0)):
         super(Car, self).__init__(position, 'car.png')
         self.original_image = self.image
         self.rect = self.image.get_rect()
-        self.realcentx, self.realcenty = self.rect.centerx, self.rect.centery
+        self.realcentx, self.realcenty = self.rect.centerx + position[0], self.rect.centery + position[1]
         self.turn_speed = 0.4
         self.angle = 0.0
         self.speed = 0.0
@@ -52,7 +53,7 @@ class Car(Actor):
     def parked_check(self, parking_spot):
         collision_mask = pygame.sprite.collide_mask(self, parking_spot)
         return collision_mask and self.realcenter.distance_to(parking_spot.get_actual_center()) < 10 \
-            and self.angle < 20 and self.angle > 340
+               and self.angle < 20 and self.angle > 340
 
     def update(self, action):
         if action == Action.STEER_LEFT:
@@ -92,4 +93,3 @@ class Car(Actor):
 
         self.realcentx += to_move_x
         self.realcenty -= to_move_y
-
