@@ -10,7 +10,7 @@ class EnvironmentWrapper(Env):
     def __init__(self, enable_rendering=False):
         self.env_name = 'CarPark-v0'
         self.env = Environment(enable_rendering=enable_rendering)
-        self.action_space = spaces.Discrete(9)
+        self.action_space = spaces.Discrete(6)
         # self.env_name = 'CartPole-v1'
         # self.env = gym.make(self.env_name)
         # self.action_space = self.env.action_space

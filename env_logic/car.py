@@ -22,6 +22,7 @@ class Car(Actor):
         self.angle = 0.0
         self.speed = 0.0
         self.mask = pygame.mask.from_surface(self.image)
+        self.rotate_spr()
 
     def get_corners(self):
         cx, cy = self.get_actual_center().to_tuple()

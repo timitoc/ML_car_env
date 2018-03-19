@@ -1,3 +1,4 @@
+import numpy as np
 import pygame
 
 from car import Car
@@ -37,14 +38,27 @@ class Environment(object):
 
     def reset(self):
         self.scene.clear()
+        # self.scene.add_park(ParkingSpot(Point(350, 340)))
+        # self.scene.set_car(Car())
+        # self.scene.add_obstacle(Obstacle(Point(25, 350)))
+        # self.scene.add_obstacle(Obstacle(Point(200, 350)))
+        # self.scene.add_obstacle(Obstacle(Point(600, 350)))
+        self.random_car_fixed_obstacles_scenario()
+
+        # self.initial_distance = self.scene.get_distance_to_goal()
+        self.initial_distance = INITIAL_DISTANCE_BENCH
+        self.current_frame = 0
+        return self.scene.get_observation()
+
+    def random_car_fixed_obstacles_scenario(self):
         self.scene.add_park(ParkingSpot(Point(350, 340)))
-        self.scene.set_car(Car())
+        car_x_limit = 600
+        car_y_limit = 200
+        self.scene.set_car(Car((int(car_x_limit * np.random.random_sample()),
+                                int(car_y_limit * np.random.random_sample()))))
         self.scene.add_obstacle(Obstacle(Point(25, 350)))
         self.scene.add_obstacle(Obstacle(Point(200, 350)))
         self.scene.add_obstacle(Obstacle(Point(600, 350)))
-        self.initial_distance = self.scene.get_distance_to_goal()
-        self.current_frame = 0
-        return self.scene.get_observation()
 
     def render(self):
         if not self.enable_rendering:

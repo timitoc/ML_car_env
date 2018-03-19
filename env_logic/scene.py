@@ -52,8 +52,7 @@ class Scene:
             actor.update(action)
 
     def get_distance_to_goal(self):
-        x, y, w, h = self.car.rect
-        car_center = Point(x + w / 2, y + h / 2)
+        car_center = self.car.get_actual_center()
         x, y, w, h = self.parking_spots[0].rect
         park_center = Point(x + w / 2, y + h / 2)
         return car_center.distance_to(park_center)
@@ -111,8 +110,9 @@ class Scene:
         else:
             distance_rew = -log(max(self.get_distance_to_goal() / initial_distance, 0.000045)).real
         # print self.car.angle, " ", -log(float(self.car.angle)/360 + 0.001).real
+
         angle_def = 1 - (self.car.angle if self.car.angle < 180 else 360 - self.car.angle) / 180
-        angle_rew = distance_rew * angle_def * angle_def
+        angle_rew = ((1 + distance_rew) ** 2 - 1) * angle_def * angle_def
         return angle_rew
         # return TIME_STEP_PENALTY + 1.0/5 * (initial_distance - self.get_distance_to_goal()) / initial_distance
 
