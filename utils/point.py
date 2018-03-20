@@ -1,6 +1,9 @@
 from cmath import sqrt, cos, sin
 
 import collections
+from math import atan2
+
+import math
 
 
 class Point(object):
@@ -49,7 +52,6 @@ def get_sp_point(a, b, c):
 
 
 def rotate(points, origin, angle):
-
     if isinstance(points, collections.Sequence):
         rez = []
         for p in points:
@@ -62,3 +64,14 @@ def rotate(points, origin, angle):
     qx = ox + cos(angle) * (px - ox) - sin(angle) * (py - oy)
     qy = oy + sin(angle) * (px - ox) + cos(angle) * (py - oy)
     return Point(qx.real, qy.real)
+
+
+def convert_to_polar(points):
+    if isinstance(points, collections.Sequence):
+        rez = []
+        for p in points:
+            rez.append(convert_to_polar(p))
+        return rez
+    distance = sqrt(points.x * points.x + points.y * points.y).real
+    angle = atan2(points.y, points.x) / math.pi
+    return Point(distance, angle)

@@ -61,7 +61,7 @@ print(model.summary())
 
 memory = SequentialMemory(limit=100000, window_length=1)
 # policy = BoltzmannQPolicy()
-policy = LinearAnnealedPolicy(EpsStochasticPolicy(), attr='eps', value_max=1., value_min=.3, value_test=.05,
+policy = LinearAnnealedPolicy(EpsStochasticPolicy(), attr='eps', value_max=1., value_min=.25, value_test=.05,
                               nb_steps=20000)
 test_policy = MaxBoltzmannQPolicy(eps=0.1)
 
@@ -70,7 +70,7 @@ test_policy = MaxBoltzmannQPolicy(eps=0.1)
 dqn = DQNAgent(model=model, nb_actions=nb_actions, memory=memory, nb_steps_warmup=10,
                enable_dueling_network=True, dueling_type='avg', target_model_update=1e-2,
                policy=policy, test_policy=test_policy)
-dqn.compile(Adam(lr=0.0005, ), metrics=['mae'])
+dqn.compile(Adam(lr=0.0003, ), metrics=['mae'])
 
 
 if args.mode == 'train':

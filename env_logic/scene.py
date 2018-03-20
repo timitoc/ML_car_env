@@ -3,7 +3,7 @@ from cmath import log
 import pygame
 
 from utils.constants import *
-from utils.point import Point
+from utils.point import Point, convert_to_polar
 
 
 class Scene:
@@ -21,6 +21,8 @@ class Scene:
         # VISUAL DEBUG
         # closest = self.closest_obstacle(self.car.get_actual_center())
         # self.debug_circle(closest)
+        # for corner in self.car.get_corners():
+        #    self.debug_circle(self.closest_obstacle(corner))
         for corner in self.car.get_corners():
             self.debug_circle(corner)
 
@@ -70,19 +72,35 @@ class Scene:
     """
 
     def get_observation(self):
+        import math
         closely = []
         for corner in self.car.get_corners():
             closely.append(corner - self.closest_obstacle(corner))
         car_center = self.car.get_actual_center()
         to_goal = car_center - self.parking_spots[0].get_actual_center()
+
+        if OBS_POLAR:
+            closely, to_goal = convert_to_polar(closely), convert_to_polar(to_goal)
+            new_arr = []
+            for close in closely:
+                new_arr.append(Point(float(close.x) / INITIAL_DISTANCE_BENCH, float(close.y) / math.pi))
+            closely = new_arr
+            to_goal = Point(to_goal.x / INITIAL_DISTANCE_BENCH, to_goal.y / math.pi)
+        else:
+            new_arr = []
+            for close in closely:
+                new_arr.append(Point(float(close.x) / self.size[0], float(close.y) / self.size[1]))
+            closely = new_arr
+            to_goal = Point(to_goal.x / self.size[0], to_goal.y / self.size[1])
+
         return [float(self.car.angle) / 360,
                 float(self.car.speed) / 6,
                 float(car_center.x) / self.size[0], float(car_center.y) / self.size[1],
-                float(closely[0].x) / self.size[0], float(closely[0].y) / self.size[1],
-                float(closely[1].x) / self.size[0], float(closely[1].y) / self.size[1],
-                float(closely[2].x) / self.size[0], float(closely[2].y) / self.size[1],
-                float(closely[3].x) / self.size[0], float(closely[3].y) / self.size[1],
-                to_goal.x / self.size[0], to_goal.y / self.size[1]
+                closely[0].x, closely[0].y,
+                closely[1].x, closely[1].y,
+                closely[2].x, closely[2].y,
+                closely[3].x, closely[3].y,
+                to_goal.x, to_goal.y
                 ]
 
     """
@@ -109,10 +127,11 @@ class Scene:
             distance_rew = GOAL_REWARD
         else:
             distance_rew = -log(max(self.get_distance_to_goal() / initial_distance, 0.000045)).real
+            # distance_rew = ((initial_distance - self.get_distance_to_goal()) / initial_distance + 1) ** 5 - 1
         # print self.car.angle, " ", -log(float(self.car.angle)/360 + 0.001).real
 
         angle_def = 1 - (self.car.angle if self.car.angle < 180 else 360 - self.car.angle) / 180
-        angle_rew = ((1 + distance_rew) ** 2 - 1) * angle_def * angle_def
+        angle_rew = distance_rew  # * angle_def * angle_def
         return angle_rew
         # return TIME_STEP_PENALTY + 1.0/5 * (initial_distance - self.get_distance_to_goal()) / initial_distance
 
