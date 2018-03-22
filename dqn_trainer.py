@@ -42,17 +42,19 @@ parser.add_argument('--weights', type=str, default=None)
 args = parser.parse_args()
 
 env = EnvironmentWrapper(enable_rendering=True)
-np.random.seed(14238)
-env.seed(14238)
+# np.random.seed(14238)
+# env.seed(14238)
 nb_actions = env.action_space.n
 
 model = Sequential()
 model.add(Flatten(input_shape=(1,) + env.observation_space.shape))
-model.add(Dense(312))
+model.add(Dense(112))
 model.add(Activation('relu'))
-model.add(Dense(156))
+model.add(Dense(112))
 model.add(Activation('relu'))
-model.add(Dense(128))
+model.add(Dense(112))
+model.add(Activation('relu'))
+model.add(Dense(112))
 model.add(Activation('relu'))
 model.add(Dense(nb_actions))
 model.add(Activation('softmax'))
@@ -70,14 +72,14 @@ test_policy = MaxBoltzmannQPolicy(eps=0.1)
 dqn = DQNAgent(model=model, nb_actions=nb_actions, memory=memory, nb_steps_warmup=10,
                enable_dueling_network=True, dueling_type='avg', target_model_update=1e-2,
                policy=policy, test_policy=test_policy)
-dqn.compile(Adam(lr=0.0003, ), metrics=['mae'])
+dqn.compile(Adam(lr=0.00025, ), metrics=['mae'])
 
 
 if args.mode == 'train':
     callbacks = [TestLogger()]
     checkpoint_weights_filename = 'model_checkpoints/dqn_' + env.env_name + '_weights_{step}.h5f'
     callbacks += [ModelIntervalCheckpoint(checkpoint_weights_filename, interval=20000)]
-    dqn.fit(env, callbacks=callbacks, nb_steps=2500000, visualize=True, verbose=2)
+    dqn.fit(env, callbacks=callbacks, nb_steps=3500000, visualize=True, verbose=2)
 
     # Save weights at the end of training
     dqn.save_weights('model_checkpoints/dqn_' + env.env_name + '_weights_{}.h5f'.format(2500000), overwrite=True)

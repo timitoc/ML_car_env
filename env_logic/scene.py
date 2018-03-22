@@ -117,6 +117,13 @@ class Scene:
                 who = project
         return who
 
+    @staticmethod
+    def dist_reward_function(actual_distance, initial_distance):
+        basic = -log(max(actual_distance / initial_distance, 0.000045)).real
+        # if basic > 1:
+        #     basic = basic * basic
+        return basic
+
     def get_reward(self, initial_distance, current_frame):
         if self.car_hit_obstacle():
             return HIT_PENALTY
@@ -126,12 +133,16 @@ class Scene:
         if self.car_reached_goal():
             distance_rew = GOAL_REWARD
         else:
-            distance_rew = -log(max(self.get_distance_to_goal() / initial_distance, 0.000045)).real
+            distance_rew = self.dist_reward_function(self.get_distance_to_goal(), initial_distance)
             # distance_rew = ((initial_distance - self.get_distance_to_goal()) / initial_distance + 1) ** 5 - 1
         # print self.car.angle, " ", -log(float(self.car.angle)/360 + 0.001).real
 
-        angle_def = 1 - (self.car.angle if self.car.angle < 180 else 360 - self.car.angle) / 180
-        angle_rew = distance_rew  # * angle_def * angle_def
+        if self.get_distance_to_goal() < 30.0:
+            angle_def = 1 - (self.car.angle if self.car.angle < 180 else 360 - self.car.angle) / 180.0
+            # angle_def = 1
+            angle_rew = max(distance_rew * angle_def * angle_def, self.dist_reward_function(30.0, initial_distance))
+        else:
+            angle_rew = distance_rew
         return angle_rew
         # return TIME_STEP_PENALTY + 1.0/5 * (initial_distance - self.get_distance_to_goal()) / initial_distance
 

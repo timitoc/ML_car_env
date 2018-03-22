@@ -15,6 +15,7 @@ class Environment(object):
         self.size = size
         self.enable_rendering = enable_rendering
         self.initial_distance = None
+
         pygame.init()
         self.screen = pygame.display.set_mode(size)
         if enable_rendering:
@@ -29,15 +30,17 @@ class Environment(object):
         self.scene.update(Action(action_value))
         observation = self.scene.get_observation()
         reward = self.scene.get_reward(self.initial_distance, self.current_frame)
+
         done = self.scene.check_done(self.current_frame)
         info = self.scene.get_auxiliar_info()
         self.current_frame += 1
-        # print "Reward ", reward, " on frame ", self.current_frame
-        # print observation
+        # print "Reward ", reward, " on frame ", self.current_frame, " and max is ", self.max_prev_reward
+        # print observation[12], " ", self.scene.get_distance_to_goal(), " ", reward
         return observation, reward, done, info
 
     def reset(self):
         self.scene.clear()
+
         # self.scene.add_park(ParkingSpot(Point(350, 340)))
         # self.scene.set_car(Car())
         # self.scene.add_obstacle(Obstacle(Point(25, 350)))
@@ -52,10 +55,13 @@ class Environment(object):
 
     def random_car_fixed_obstacles_scenario(self):
         self.scene.add_park(ParkingSpot(Point(350, 340)))
-        car_x_limit = 600
-        car_y_limit = 200
-        self.scene.set_car(Car((int(car_x_limit * np.random.random_sample()),
-                                int(car_y_limit * np.random.random_sample()))))
+        car_x_limit = 250
+        car_y_limit = 100
+        # self.scene.set_car(Car((int(car_x_limit * np.random.random_sample()),
+        #                        int(car_y_limit * np.random.random_sample()))))
+        # self.scene.set_car(Car((car_x_limit, car_y_limit)))
+        self.scene.set_car(Car((car_x_limit * np.random.random_sample(),
+                                180 + 100 * np.random.random_sample())))
         self.scene.add_obstacle(Obstacle(Point(25, 350)))
         self.scene.add_obstacle(Obstacle(Point(200, 350)))
         self.scene.add_obstacle(Obstacle(Point(600, 350)))
