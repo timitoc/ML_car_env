@@ -7,7 +7,12 @@ from parking_spot import ParkingSpot
 from scene import Scene
 from utils.constants import *
 from utils.point import Point
+from random import randint
 
+obstacle_images = []
+obstacle_images.append('obstacle0.png')
+obstacle_images.append('obstacle1.png')
+obstacle_images.append('obstacle2.png')
 
 class Environment(object):
     def __init__(self, size=[720, 420], enable_rendering=True):
@@ -56,9 +61,14 @@ class Environment(object):
         car_y_limit = 200
         self.scene.set_car(Car((int(car_x_limit * np.random.random_sample()),
                                 int(car_y_limit * np.random.random_sample()))))
-        self.scene.add_obstacle(Obstacle(Point(25, 350)))
-        self.scene.add_obstacle(Obstacle(Point(200, 350)))
-        self.scene.add_obstacle(Obstacle(Point(600, 350)))
+        self.scene.add_obstacle(Obstacle(Point(25, 350), obstacle_images[randint(0, 2)]))
+        self.scene.add_obstacle(Obstacle(Point(200, 350), obstacle_images[randint(0, 2)]))
+        self.scene.add_obstacle(Obstacle(Point(600, 350), obstacle_images[randint(0, 2)]))
+
+        #self.scene.add_obstacle(Obstacle(Point(1, 1), 'obstacle_width.png'))
+        #self.scene.add_obstacle(Obstacle(Point(719, 1), 'obstacle_width.png'))
+        #self.scene.add_obstacle(Obstacle(Point(1, 1), 'obstacle_length.png'))
+        #self.scene.add_obstacle(Obstacle(Point(1, 419), 'obstacle_length.png'))
 
     def render(self):
         if not self.enable_rendering:

@@ -46,7 +46,7 @@ class Car(Actor):
     def border_check(self, bounds):
         x, y, w, h = self.rect
         center_x, center_y = x + w / 2, y + h / 2
-        return center_x < 0 or center_x > bounds[0] or center_y < 0 or center_y > bounds[1]
+        return center_x < 32 or center_x > bounds[0] - 32 or center_y < 64 or center_y > bounds[1] - 64
 
     def obstacle_check(self, obstacle):
         return pygame.sprite.collide_mask(self, obstacle)
