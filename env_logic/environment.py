@@ -65,10 +65,10 @@ class Environment(object):
         self.scene.add_obstacle(Obstacle(Point(200, 350), obstacle_images[randint(0, 2)]))
         self.scene.add_obstacle(Obstacle(Point(600, 350), obstacle_images[randint(0, 2)]))
 
-        #self.scene.add_obstacle(Obstacle(Point(1, 1), 'obstacle_width.png'))
-        #self.scene.add_obstacle(Obstacle(Point(719, 1), 'obstacle_width.png'))
-        #self.scene.add_obstacle(Obstacle(Point(1, 1), 'obstacle_length.png'))
-        #self.scene.add_obstacle(Obstacle(Point(1, 419), 'obstacle_length.png'))
+        self.scene.add_obstacle(Obstacle(Point(-2, 0), 'obstacle_width.png'))
+        self.scene.add_obstacle(Obstacle(Point(720, 0), 'obstacle_width.png'))
+        self.scene.add_obstacle(Obstacle(Point(0, -2), 'obstacle_length.png'))
+        self.scene.add_obstacle(Obstacle(Point(0, 420), 'obstacle_length.png'))
 
     def render(self):
         if not self.enable_rendering:

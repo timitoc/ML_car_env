@@ -5,7 +5,7 @@ from utils.point import get_sp_point
 
 
 class Obstacle(Actor):
-    def __init__(self, position, spirte_name):
+    def __init__(self, position, spirte_name = ''):
         super(Obstacle, self).__init__(position, spirte_name)
         self.rect.x = position.x
         self.rect.y = position.y

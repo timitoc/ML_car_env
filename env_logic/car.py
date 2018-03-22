@@ -56,6 +56,9 @@ class Car(Actor):
         return collision_mask and self.realcenter.distance_to(parking_spot.get_actual_center()) < 10 \
                and self.angle < 20 and self.angle > 340
 
+    def min_distance_to_borders(self):
+        return min(self.centerx, )
+
     def update(self, action):
         if action == Action.STEER_LEFT:
             self.angle += (self.turn_speed * self.speed)
