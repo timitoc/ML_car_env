@@ -7,7 +7,12 @@ from parking_spot import ParkingSpot
 from scene import Scene
 from utils.constants import *
 from utils.point import Point
+from random import randint
 
+obstacle_images = []
+obstacle_images.append('obstacle0.png')
+obstacle_images.append('obstacle1.png')
+obstacle_images.append('obstacle2.png')
 
 class Environment(object):
     def __init__(self, size=[720, 420], enable_rendering=True):
@@ -54,17 +59,21 @@ class Environment(object):
         return self.scene.get_observation()
 
     def random_car_fixed_obstacles_scenario(self):
-        self.scene.add_park(ParkingSpot(Point(350, 340)))
-        car_x_limit = 600
+        self.scene.add_park(ParkingSpot(Point(350, 320)))
+        car_x_limit = 550
         car_y_limit = 270
         self.scene.set_car(Car((int(car_x_limit * np.random.random_sample()),
                                 int(car_y_limit * np.random.random_sample()))))
         # self.scene.set_car(Car((car_x_limit, car_y_limit)))
-        # self.scene.set_car(Car((car_x_limit * np.random.random_sample(),
-        #                         180 + 100 * np.random.random_sample())))
-        self.scene.add_obstacle(Obstacle(Point(25, 350)))
-        self.scene.add_obstacle(Obstacle(Point(200, 350)))
-        self.scene.add_obstacle(Obstacle(Point(600, 350)))
+
+        self.scene.add_obstacle(Obstacle(Point(20, 330), obstacle_images[randint(0, 2)]))
+        self.scene.add_obstacle(Obstacle(Point(180, 330), obstacle_images[randint(0, 2)]))
+        self.scene.add_obstacle(Obstacle(Point(600, 330), obstacle_images[randint(0, 2)]))
+
+        self.scene.add_obstacle(Obstacle(Point(-2, 0), 'obstacle_width.png'))
+        self.scene.add_obstacle(Obstacle(Point(720, 0), 'obstacle_width.png'))
+        self.scene.add_obstacle(Obstacle(Point(0, -2), 'obstacle_length.png'))
+        self.scene.add_obstacle(Obstacle(Point(0, 420), 'obstacle_length.png'))
 
     def render(self):
         if not self.enable_rendering:

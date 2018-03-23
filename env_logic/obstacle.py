@@ -5,8 +5,8 @@ from utils.point import get_sp_point
 
 
 class Obstacle(Actor):
-    def __init__(self, position):
-        super(Obstacle, self).__init__(position, 'obstacle.png')
+    def __init__(self, position, spirte_name = ''):
+        super(Obstacle, self).__init__(position, spirte_name)
         self.rect.x = position.x
         self.rect.y = position.y
         self.mask = pygame.mask.from_surface(self.image)
