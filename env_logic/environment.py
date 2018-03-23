@@ -55,13 +55,13 @@ class Environment(object):
 
     def random_car_fixed_obstacles_scenario(self):
         self.scene.add_park(ParkingSpot(Point(350, 340)))
-        car_x_limit = 250
-        car_y_limit = 100
-        # self.scene.set_car(Car((int(car_x_limit * np.random.random_sample()),
-        #                        int(car_y_limit * np.random.random_sample()))))
+        car_x_limit = 600
+        car_y_limit = 270
+        self.scene.set_car(Car((int(car_x_limit * np.random.random_sample()),
+                                int(car_y_limit * np.random.random_sample()))))
         # self.scene.set_car(Car((car_x_limit, car_y_limit)))
-        self.scene.set_car(Car((car_x_limit * np.random.random_sample(),
-                                180 + 100 * np.random.random_sample())))
+        # self.scene.set_car(Car((car_x_limit * np.random.random_sample(),
+        #                         180 + 100 * np.random.random_sample())))
         self.scene.add_obstacle(Obstacle(Point(25, 350)))
         self.scene.add_obstacle(Obstacle(Point(200, 350)))
         self.scene.add_obstacle(Obstacle(Point(600, 350)))

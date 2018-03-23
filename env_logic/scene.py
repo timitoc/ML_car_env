@@ -95,7 +95,7 @@ class Scene:
 
         return [float(self.car.angle) / 360,
                 float(self.car.speed) / 6,
-                float(car_center.x) / self.size[0], float(car_center.y) / self.size[1],
+                # float(car_center.x) / self.size[0], float(car_center.y) / self.size[1],
                 closely[0].x, closely[0].y,
                 closely[1].x, closely[1].y,
                 closely[2].x, closely[2].y,
@@ -137,10 +137,14 @@ class Scene:
             # distance_rew = ((initial_distance - self.get_distance_to_goal()) / initial_distance + 1) ** 5 - 1
         # print self.car.angle, " ", -log(float(self.car.angle)/360 + 0.001).real
 
-        if self.get_distance_to_goal() < 30.0:
-            angle_def = 1 - (self.car.angle if self.car.angle < 180 else 360 - self.car.angle) / 180.0
-            # angle_def = 1
-            angle_rew = max(distance_rew * angle_def * angle_def, self.dist_reward_function(30.0, initial_distance))
+        import math
+        if self.get_distance_to_goal() < 45.0:
+            angle_closure = 1.0 * (self.car.angle if self.car.angle < 180 else 360 - self.car.angle)
+            angle_def = 1 - angle_closure / 180.0
+            angle_def = 1
+            angle_rew = max(distance_rew * angle_def * angle_def, self.dist_reward_function(45.0, initial_distance))
+            if angle_closure < 90:
+                angle_rew += math.cos(math.radians(angle_closure)).real
         else:
             angle_rew = distance_rew
         return angle_rew
