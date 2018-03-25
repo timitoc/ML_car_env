@@ -139,16 +139,12 @@ class Scene:
         for obstacle in self.obstacles:
             if self.car.obstacle_check(obstacle) is not None:
                 return True
-        if self.car.border_check(self.size):
-            return True
 
     def car_reached_goal(self):
         goal_point = self.parking_spots[0].get_actual_center()
         car_point = self.car.get_actual_center()
         distance_left = car_point.distance_to(goal_point)
-        # print distance_left
-        good_angle = (340 < self.car.angle < 360 or 0 < self.car.angle < 20)
-        return distance_left < GOAL_DISTANCE_MARGIN and good_angle
+        return distance_left < GOAL_DISTANCE_MARGIN
 
     def check_done(self, current_frame):
         if self.car_hit_obstacle():

@@ -43,21 +43,8 @@ class Car(Actor):
         self.rotate_spr()
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
-    def border_check(self, bounds):
-        x, y, w, h = self.rect
-        center_x, center_y = x + w / 2, y + h / 2
-        return center_x < 32 or center_x > bounds[0] - 32 or center_y < 64 or center_y > bounds[1] - 64
-
     def obstacle_check(self, obstacle):
         return pygame.sprite.collide_mask(self, obstacle)
-
-    def parked_check(self, parking_spot):
-        collision_mask = pygame.sprite.collide_mask(self, parking_spot)
-        return collision_mask and self.realcenter.distance_to(parking_spot.get_actual_center()) < 10 \
-               and self.angle < 20 and self.angle > 340
-
-    def min_distance_to_borders(self):
-        return min(self.centerx, )
 
     def update(self, action):
         if action == Action.STEER_LEFT:
@@ -97,3 +84,5 @@ class Car(Actor):
 
         self.realcentx += to_move_x
         self.realcenty -= to_move_y
+
+
