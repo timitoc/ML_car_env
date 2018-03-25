@@ -25,15 +25,19 @@ class Scene:
         #    self.debug_circle(self.closest_obstacle(corner))
         for corner in self.car.get_corners():
             self.debug_circle(corner)
+        for g in self.parking_spots[0].pivots:
+            self.debug_circle(g)
 
     def debug_circle(self, point):
-        pygame.draw.circle(self.screen, GREEN, (int(point.x), int(point.y)), 5)
+        pygame.draw.circle(self.screen, BLACK, (int(point.x), int(point.y)), 5)
 
     def add_actor(self, actor):
         self.actors.append(actor)
 
     def set_car(self, car):
         self.car = car
+        _, _, w, h = self.car.rect
+        self.parking_spots[0].set_pivots(w, h)
         self.add_actor(car)
 
     def add_obstacle(self, obstacle):
@@ -124,11 +128,31 @@ class Scene:
         #     basic = basic * basic
         return basic
 
+    def corner_style_reward(self, initial_distance, current_frame):
+        distance_rew = 0
+        corner_dists = []
+        if self.car_reached_goal():
+            distance_rew = GOAL_REWARD
+        else:
+            car_corners = self.car.get_corners()
+            park_corners = self.parking_spots[0].pivots
+            for i in range(0, 4):
+                corner_dists.append(car_corners[i].distance_to(park_corners[i]))
+                # distance_rew += self.dist_reward_function(corner_dists[i], initial_distance)
+            distance_rew = min([self.dist_reward_function(corner_dist, initial_distance)
+                                for corner_dist in corner_dists]) + \
+                           sum([self.dist_reward_function(corner_dist, initial_distance)
+                                for corner_dist in corner_dists]) / 6
+
+        return distance_rew
+
     def get_reward(self, initial_distance, current_frame):
         if self.car_hit_obstacle():
             return HIT_PENALTY
         if current_frame >= FRAME_LIMIT:
             return FORFEIT_PENALTY
+
+        return self.corner_style_reward(initial_distance, current_frame)
 
         if self.car_reached_goal():
             distance_rew = GOAL_REWARD

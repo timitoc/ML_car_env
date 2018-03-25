@@ -39,8 +39,9 @@ class Environment(object):
         done = self.scene.check_done(self.current_frame)
         info = self.scene.get_auxiliar_info()
         self.current_frame += 1
-        # print "Reward ", reward, " on frame ", self.current_frame, " and max is ", self.max_prev_reward
-        # print observation[12], " ", self.scene.get_distance_to_goal(), " ", reward
+        # print "Reward ", reward, " on frame ", self.current_frame
+        # print observation[12], " ", self.scene.get_distance_to_goal(), " ", reward)
+        # print observation
         return observation, reward, done, info
 
     def reset(self):
@@ -66,9 +67,9 @@ class Environment(object):
                                 int(car_y_limit * np.random.random_sample()))))
         # self.scene.set_car(Car((car_x_limit, car_y_limit)))
 
-        self.scene.add_obstacle(Obstacle(Point(20, 330), obstacle_images[randint(0, 2)]))
-        self.scene.add_obstacle(Obstacle(Point(180, 330), obstacle_images[randint(0, 2)]))
-        self.scene.add_obstacle(Obstacle(Point(600, 330), obstacle_images[randint(0, 2)]))
+        # self.scene.add_obstacle(Obstacle(Point(20, 330), obstacle_images[randint(0, 2)]))
+        # self.scene.add_obstacle(Obstacle(Point(180, 330), obstacle_images[randint(0, 2)]))
+        # self.scene.add_obstacle(Obstacle(Point(600, 330), obstacle_images[randint(0, 2)]))
 
         self.scene.add_obstacle(Obstacle(Point(-2, 0), 'obstacle_width.png'))
         self.scene.add_obstacle(Obstacle(Point(720, 0), 'obstacle_width.png'))
