@@ -60,8 +60,8 @@ class Environment(object):
         self.scene.add_park(ParkingSpot(Point(370, 270)))
         car_x_offset = 20
         car_y_offset = 20
-        car_x_limit = 0
-        car_y_limit = 0
+        car_x_limit = 580
+        car_y_limit = 180
         self.scene.set_car(Car((car_x_offset + int(car_x_limit * np.random.random_sample()),
                                 car_y_offset + int(car_y_limit * np.random.random_sample()))))
 
@@ -88,8 +88,8 @@ class Environment(object):
 
         car_x_offset = 20
         car_y_offset = 20
-        car_x_limit = 0
-        car_y_limit = 0
+        car_x_limit = 180
+        car_y_limit = 580
         self.scene.set_car(Car((car_x_offset + int(car_x_limit * np.random.random_sample()),
                                 car_y_offset + int(car_y_limit * np.random.random_sample()))))
 
