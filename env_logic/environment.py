@@ -49,7 +49,7 @@ class Environment(object):
         # self.scene.add_obstacle(Obstacle(Point(200, 350)))
         # self.scene.add_obstacle(Obstacle(Point(600, 350)))
 
-        self.pseudo_random_vertical_scenario()
+        self.random_vertical_scenario()
 
         # self.initial_distance = self.scene.get_distance_to_goal()
         self.initial_distance = INITIAL_DISTANCE_BENCH
@@ -60,7 +60,7 @@ class Environment(object):
         self.scene.add_park(ParkingSpot(Point(370, 270)))
         car_x_offset = 20
         car_y_offset = 20
-        car_x_limit = 580
+        car_x_limit = 570
         car_y_limit = 180
         self.scene.set_car(Car((car_x_offset + int(car_x_limit * np.random.random_sample()),
                                 car_y_offset + int(car_y_limit * np.random.random_sample()))))
@@ -84,14 +84,17 @@ class Environment(object):
             if i == parking_spot_index:
                 self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * 25 - 15, 270)))
             else:
-                self.scene.add_obstacle(Obstacle(Point(15 + i * 64 + i * 25 + randint(-3, 3), 270 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
+                self.scene.add_obstacle(Obstacle(Point(15 + i * 64 + i * 25 + randint(-3, 3), 270 + randint(-3, 3)),
+                                                 obstacle_images[randint(0, 2)]))
 
         car_x_offset = 20
         car_y_offset = 20
-        car_x_limit = 180
-        car_y_limit = 580
+        car_x_limit = 0
+        car_y_limit = 0
         self.scene.set_car(Car((car_x_offset + int(car_x_limit * np.random.random_sample()),
                                 car_y_offset + int(car_y_limit * np.random.random_sample()))))
+
+        # self.scene.set_car(Car((car_x_offset + car_x_limit, car_y_offset + car_y_limit)))
 
         self.scene.add_obstacle(Obstacle(Point(-2, 0), 'obstacle_width.png'))
         self.scene.add_obstacle(Obstacle(Point(720, 0), 'obstacle_width.png'))

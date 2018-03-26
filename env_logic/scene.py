@@ -48,6 +48,7 @@ class Scene:
         self.car = None
         self.obstacles = []
         self.actors = []
+        self.parking_spots = []
 
     def update(self, action):
         for actor in self.actors:
@@ -72,7 +73,6 @@ class Scene:
     """
 
     def get_observation(self):
-        import math
         closely = []
         for corner in self.car.get_corners():
             closely.append(corner - self.closest_obstacle(corner))
@@ -83,9 +83,9 @@ class Scene:
             closely, to_goal = convert_to_polar(closely), convert_to_polar(to_goal)
             new_arr = []
             for close in closely:
-                new_arr.append(Point(float(close.x) / INITIAL_DISTANCE_BENCH, float(close.y) / math.pi))
+                new_arr.append(Point(float(close.x) / INITIAL_DISTANCE_BENCH, float(close.y)))
             closely = new_arr
-            to_goal = Point(to_goal.x / INITIAL_DISTANCE_BENCH, to_goal.y / math.pi)
+            to_goal = Point(to_goal.x / INITIAL_DISTANCE_BENCH, to_goal.y)
         else:
             new_arr = []
             for close in closely:
@@ -94,8 +94,8 @@ class Scene:
             to_goal = Point(to_goal.x / self.size[0], to_goal.y / self.size[1])
 
         return [float(self.car.angle) / 360,
-                float(self.car.speed) / 6,
-                float(car_center.x) / self.size[0], float(car_center.y) / self.size[1],
+                float(self.car.speed) / 5,
+                # float(car_center.x) / self.size[0], float(car_center.y) / self.size[1],
                 closely[0].x, closely[0].y,
                 closely[1].x, closely[1].y,
                 closely[2].x, closely[2].y,
