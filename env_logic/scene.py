@@ -5,6 +5,7 @@ import pygame
 from utils.constants import *
 from utils.point import Point, convert_to_polar
 
+bg = pygame.image.load('sprites/bg.png')
 
 class Scene:
     def __init__(self, screen, size):
@@ -16,6 +17,7 @@ class Scene:
         self.obstacles = []
 
     def draw(self):
+        self.screen.blit(bg, (0, 0))
         for actor in self.actors:
             actor.draw(self.screen)
         # VISUAL DEBUG

@@ -13,6 +13,8 @@ obstacle_images = []
 obstacle_images.append('obstacle0.png')
 obstacle_images.append('obstacle1.png')
 obstacle_images.append('obstacle2.png')
+obstacle_images.append('obstacle3.png')
+obstacle_images.append('obstacle4.png')
 
 class Environment(object):
     def __init__(self, size=[720, 420], enable_rendering=True):
@@ -78,14 +80,41 @@ class Environment(object):
         self.scene.add_obstacle(Obstacle(Point(0, -2), 'obstacle_length.png'))
         self.scene.add_obstacle(Obstacle(Point(0, 420), 'obstacle_length.png'))
 
-    def random_vertical_scenario(self):
+    def spawn_7(self):
         parking_spot_index = randint(3, 5)
+        for i in range(0, 7):
+            if i == parking_spot_index:
+                self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * 35 - 15, 270)))
+            else:
+                self.scene.add_obstacle(Obstacle(Point(15 + i * 64 + i * 35 + randint(-3, 3), 270 + randint(-3, 3)),
+                                                 obstacle_images[randint(0, 4)]))
+
+    def spawn_8(self):
+        parking_spot_index = randint(3, 6)
         for i in range(0, 8):
             if i == parking_spot_index:
                 self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * 25 - 15, 270)))
             else:
                 self.scene.add_obstacle(Obstacle(Point(15 + i * 64 + i * 25 + randint(-3, 3), 270 + randint(-3, 3)),
-                                                 obstacle_images[randint(0, 2)]))
+                                                 obstacle_images[randint(0, 4)]))
+
+    def spawn_9(self):
+        parking_spot_index = randint(3, 7)
+        for i in range(0, 9):
+            if i == parking_spot_index:
+                self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * 15 - 15, 270)))
+            else:
+                self.scene.add_obstacle(Obstacle(Point(15 + i * 64 + i * 15 + randint(-3, 3), 270 + randint(-3, 3)),
+                                                 obstacle_images[randint(0, 4)]))
+
+    def random_vertical_scenario(self):
+        number_of_spots = randint(7, 9)
+        if number_of_spots == 7:
+            self.spawn_7()
+        elif number_of_spots == 8:
+            self.spawn_8()
+        else:
+            self.spawn_9()
 
         car_x_offset = 20
         car_y_offset = 20
