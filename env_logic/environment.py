@@ -79,7 +79,7 @@ class Environment(object):
         self.scene.add_obstacle(Obstacle(Point(0, 420), 'obstacle_length.png'))
 
     def random_vertical_scenario(self):
-        parking_spot_index = randint(0, 7)
+        parking_spot_index = randint(3, 5)
         for i in range(0, 8):
             if i == parking_spot_index:
                 self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * 25 - 15, 270)))
@@ -89,7 +89,7 @@ class Environment(object):
 
         car_x_offset = 20
         car_y_offset = 20
-        car_x_limit = 0
+        car_x_limit = 570
         car_y_limit = 0
         self.scene.set_car(Car((car_x_offset + int(car_x_limit * np.random.random_sample()),
                                 car_y_offset + int(car_y_limit * np.random.random_sample()))))
