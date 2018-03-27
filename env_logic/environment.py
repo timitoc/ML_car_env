@@ -81,7 +81,7 @@ class Environment(object):
         self.scene.add_obstacle(Obstacle(Point(0, 420), 'obstacle_length.png'))
 
     def spawn_7(self):
-        parking_spot_index = randint(3, 5)
+        parking_spot_index = randint(3, 6)
         for i in range(0, 7):
             if i == parking_spot_index:
                 self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * 35 - 15, 270)))
@@ -90,7 +90,7 @@ class Environment(object):
                                                  obstacle_images[randint(0, 4)]))
 
     def spawn_8(self):
-        parking_spot_index = randint(3, 6)
+        parking_spot_index = randint(3, 7)
         for i in range(0, 8):
             if i == parking_spot_index:
                 self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * 25 - 15, 270)))
@@ -99,7 +99,7 @@ class Environment(object):
                                                  obstacle_images[randint(0, 4)]))
 
     def spawn_9(self):
-        parking_spot_index = randint(3, 7)
+        parking_spot_index = randint(3, 8)
         for i in range(0, 9):
             if i == parking_spot_index:
                 self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * 15 - 15, 270)))
@@ -118,7 +118,7 @@ class Environment(object):
 
         car_x_offset = 20
         car_y_offset = 20
-        car_x_limit = 570
+        car_x_limit = 0
         car_y_limit = 0
         self.scene.set_car(Car((car_x_offset + int(car_x_limit * np.random.random_sample()),
                                 car_y_offset + int(car_y_limit * np.random.random_sample()))))

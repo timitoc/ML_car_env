@@ -18,12 +18,20 @@ from epsStochastic import EpsStochasticPolicy
 
 
 class TestLogger(Callback):
-    def __init__(self):
+    def __init__(self, file_path=None, interval=100):
         super(TestLogger, self).__init__()
+        self.file_path = file_path
+        self.interval = interval
+        self.reward_array = []
+        self.running_reward = 0
         self.scores = deque(maxlen=100)
 
     def on_train_begin(self, logs):
         print "Train begin callback xD"
+
+    def on_train_end(self, logs):
+        print "Train end callback xD"
+        self.save_data()
 
     def on_episode_end(self, episode, logs):
         self.scores.append(int(logs['episode_reward']))
@@ -33,7 +41,16 @@ class TestLogger(Callback):
             logs['episode_reward'],
             np.mean(self.scores),
         ]
+        self.running_reward = 0.99 * self.running_reward + 0.01 * variables[1]
+        self.reward_array.append([variables[0], variables[1], variables[2], self.running_reward])
         print(template.format(*variables))
+        if self.file_path is not None and episode % self.interval == 0:
+            self.save_data()
+
+    def save_data(self):
+        print "aici ", self.reward_array
+        with open(self.file_path, 'w') as f:
+            f.write(np.array2string(np.array(self.reward_array), separator=', '))
 
 
 parser = argparse.ArgumentParser()
@@ -83,7 +100,7 @@ if args.mode == 'resume':
     dqn.load_weights(weights_filename)
 
 if args.mode == 'train' or args.mode == 'resume':
-    callbacks = [TestLogger()]
+    callbacks = [TestLogger('rewards_dump')]
     checkpoint_weights_filename = 'model_checkpoints/dqn_' + env.env_name + '_weights_{step}.h5f'
     callbacks += [ModelIntervalCheckpoint(checkpoint_weights_filename, interval=20000)]
     dqn.fit(env, callbacks=callbacks, nb_steps=3500000, visualize=True, verbose=2)
