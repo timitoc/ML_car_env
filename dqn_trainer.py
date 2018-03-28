@@ -22,12 +22,16 @@ class TestLogger(Callback):
         super(TestLogger, self).__init__()
         self.file_path = file_path
         self.interval = interval
-        self.reward_array = []
+        self.reward_array = np.empty(shape=[0, 5])
         self.running_reward = 0
+        self.total_steps = 0
         self.scores = deque(maxlen=100)
 
     def on_train_begin(self, logs):
         print "Train begin callback xD"
+
+    def on_step_end(self, step, logs={}):
+        self.total_steps += 1
 
     def on_train_end(self, logs):
         print "Train end callback xD"
@@ -42,7 +46,10 @@ class TestLogger(Callback):
             np.mean(self.scores),
         ]
         self.running_reward = 0.99 * self.running_reward + 0.01 * variables[1]
-        self.reward_array.append([variables[0], variables[1], variables[2], self.running_reward])
+        self.reward_array = np.append(
+            self.reward_array,
+            [[self.total_steps, variables[0], variables[1], variables[2], self.running_reward]],
+            axis=0)
         print(template.format(*variables))
         if self.file_path is not None and episode % self.interval == 0:
             self.save_data()
@@ -50,7 +57,8 @@ class TestLogger(Callback):
     def save_data(self):
         print "aici ", self.reward_array
         with open(self.file_path, 'w') as f:
-            f.write(np.array2string(np.array(self.reward_array), separator=', '))
+            # f.write(np.array2string(np.array(self.reward_array), separator=', '))
+            np.save(f, self.reward_array)
 
 
 parser = argparse.ArgumentParser()

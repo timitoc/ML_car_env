@@ -84,7 +84,7 @@ class Environment(object):
         parking_spot_index = randint(3, 6)
         for i in range(0, 7):
             if i == parking_spot_index:
-                self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * 35 - 15, 270)))
+                self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * 35 - 15, 260)))
             else:
                 self.scene.add_obstacle(Obstacle(Point(15 + i * 64 + i * 35 + randint(-3, 3), 270 + randint(-3, 3)),
                                                  obstacle_images[randint(0, 4)]))
@@ -93,7 +93,7 @@ class Environment(object):
         parking_spot_index = randint(3, 7)
         for i in range(0, 8):
             if i == parking_spot_index:
-                self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * 25 - 15, 270)))
+                self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * 25 - 15, 260)))
             else:
                 self.scene.add_obstacle(Obstacle(Point(15 + i * 64 + i * 25 + randint(-3, 3), 270 + randint(-3, 3)),
                                                  obstacle_images[randint(0, 4)]))
@@ -102,7 +102,7 @@ class Environment(object):
         parking_spot_index = randint(3, 8)
         for i in range(0, 9):
             if i == parking_spot_index:
-                self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * 15 - 15, 270)))
+                self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * 15 - 15, 260)))
             else:
                 self.scene.add_obstacle(Obstacle(Point(15 + i * 64 + i * 15 + randint(-3, 3), 270 + randint(-3, 3)),
                                                  obstacle_images[randint(0, 4)]))
