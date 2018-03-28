@@ -2,15 +2,14 @@ from collections import deque
 
 import argparse
 import numpy as np
-import gym
 
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Flatten
-from keras.optimizers import Adam, Adadelta
+from keras.optimizers import Adam
 
 from rl.agents.dqn import DQNAgent
 from rl.callbacks import Callback, ModelIntervalCheckpoint
-from rl.policy import BoltzmannQPolicy, LinearAnnealedPolicy, EpsGreedyQPolicy, MaxBoltzmannQPolicy
+from rl.policy import LinearAnnealedPolicy, MaxBoltzmannQPolicy
 from rl.memory import SequentialMemory
 
 from bridge import EnvironmentWrapper
@@ -55,9 +54,7 @@ class TestLogger(Callback):
             self.save_data()
 
     def save_data(self):
-        print "aici ", self.reward_array
         with open(self.file_path, 'w') as f:
-            # f.write(np.array2string(np.array(self.reward_array), separator=', '))
             np.save(f, self.reward_array)
 
 
@@ -84,7 +81,6 @@ model.add(Activation('softmax'))
 print(model.summary())
 
 memory = SequentialMemory(limit=100000, window_length=1)
-# policy = BoltzmannQPolicy()
 if args.mode == 'train':
     policy = LinearAnnealedPolicy(EpsStochasticPolicy(), attr='eps', value_max=1., value_min=.25, value_test=.05,
                                   nb_steps=20000)

@@ -9,12 +9,8 @@ from utils.constants import *
 from utils.point import Point
 from random import randint
 
-obstacle_images = []
-obstacle_images.append('obstacle0.png')
-obstacle_images.append('obstacle1.png')
-obstacle_images.append('obstacle2.png')
-obstacle_images.append('obstacle3.png')
-obstacle_images.append('obstacle4.png')
+obstacle_images = ['obstacle0.png', 'obstacle1.png', 'obstacle2.png', 'obstacle3.png', 'obstacle4.png']
+
 
 class Environment(object):
     def __init__(self, size=[720, 420], enable_rendering=True):
@@ -30,7 +26,6 @@ class Environment(object):
         else:
             self.scene = Scene(None, self.size)
         self.reset()
-        # pygame.mouse.set_visible(0)
 
     def step(self, action_value):
         self.scene.update(Action(action_value))
@@ -53,7 +48,6 @@ class Environment(object):
 
         self.random_vertical_scenario()
 
-        # self.initial_distance = self.scene.get_distance_to_goal()
         self.initial_distance = INITIAL_DISTANCE_BENCH
         self.current_frame = 0
         return self.scene.get_observation()
@@ -67,13 +61,20 @@ class Environment(object):
         self.scene.set_car(Car((car_x_offset + int(car_x_limit * np.random.random_sample()),
                                 car_y_offset + int(car_y_limit * np.random.random_sample()))))
 
-        self.scene.add_obstacle(Obstacle(Point(20 + randint(-3, 3), 280 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
-        self.scene.add_obstacle(Obstacle(Point(110 + randint(-3, 3), 280 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
-        self.scene.add_obstacle(Obstacle(Point(200 + randint(-3, 3), 280 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
-        self.scene.add_obstacle(Obstacle(Point(290 + randint(-3, 3), 280 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
-        self.scene.add_obstacle(Obstacle(Point(470 + randint(-3, 3), 280 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
-        self.scene.add_obstacle(Obstacle(Point(560 + randint(-3, 3), 280 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
-        self.scene.add_obstacle(Obstacle(Point(640 + randint(-3, 3), 280 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
+        self.scene.add_obstacle(
+            Obstacle(Point(20 + randint(-3, 3), 280 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
+        self.scene.add_obstacle(
+            Obstacle(Point(110 + randint(-3, 3), 280 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
+        self.scene.add_obstacle(
+            Obstacle(Point(200 + randint(-3, 3), 280 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
+        self.scene.add_obstacle(
+            Obstacle(Point(290 + randint(-3, 3), 280 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
+        self.scene.add_obstacle(
+            Obstacle(Point(470 + randint(-3, 3), 280 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
+        self.scene.add_obstacle(
+            Obstacle(Point(560 + randint(-3, 3), 280 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
+        self.scene.add_obstacle(
+            Obstacle(Point(640 + randint(-3, 3), 280 + randint(-3, 3)), obstacle_images[randint(0, 2)]))
 
         self.scene.add_obstacle(Obstacle(Point(-2, 0), 'obstacle_width.png'))
         self.scene.add_obstacle(Obstacle(Point(720, 0), 'obstacle_width.png'))

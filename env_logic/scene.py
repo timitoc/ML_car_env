@@ -7,6 +7,7 @@ from utils.point import Point, convert_to_polar
 
 bg = pygame.image.load('sprites/background.png')
 
+
 class Scene:
     def __init__(self, screen, size):
         self.screen = screen
@@ -129,13 +130,11 @@ class Scene:
             distance_rew = GOAL_REWARD
         else:
             distance_rew = -log(max(self.get_distance_to_goal() / initial_distance, 0.000045)).real
-            # distance_rew = ((initial_distance - self.get_distance_to_goal()) / initial_distance + 1) ** 5 - 1
         # print self.car.angle, " ", -log(float(self.car.angle)/360 + 0.001).real
 
         angle_def = 1 - (self.car.angle if self.car.angle < 180 else 360 - self.car.angle) / 180
         angle_rew = distance_rew  # * angle_def * angle_def
         return angle_rew
-        # return TIME_STEP_PENALTY + 1.0/5 * (initial_distance - self.get_distance_to_goal()) / initial_distance
 
     def car_hit_obstacle(self):
         for obstacle in self.obstacles:
@@ -151,8 +150,6 @@ class Scene:
     def check_done(self, current_frame):
         if self.car_hit_obstacle():
             return True
-        # if self.car_reached_goal():
-        #     return True
         if current_frame >= FRAME_LIMIT:
             return True
         return False

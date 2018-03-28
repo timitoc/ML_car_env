@@ -24,7 +24,6 @@ class Actor(object):
 
     def draw(self, screen):
         pass
-        # print ("Attempt to draw " + self.name)
 
     def update(self, action):
         pass
