@@ -5,7 +5,7 @@ import pygame
 from utils.constants import *
 from utils.point import Point, convert_to_polar
 
-bg = pygame.image.load('sprites/bg.png')
+bg = pygame.image.load('sprites/background.png')
 
 class Scene:
     def __init__(self, screen, size):

@@ -123,7 +123,7 @@ else:
     weights_filename = None
     if args.weights:
         weights_filename = args.weights
+        dqn.load_weights(weights_filename)
     else:
         print "You need to specify a model checkpoint for testing"
-    dqn.load_weights(weights_filename)
-    dqn.test(env, nb_episodes=20, visualize=True)
+    dqn.test(env, nb_episodes=200, visualize=True)
