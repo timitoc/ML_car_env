@@ -40,7 +40,6 @@ class Car(Actor):
 
     def draw(self, screen):
         super(Car, self).draw(screen)
-        self.rotate_spr()
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
     def obstacle_check(self, obstacle):
@@ -84,5 +83,7 @@ class Car(Actor):
 
         self.realcentx += to_move_x
         self.realcenty -= to_move_y
+        self.rotate_spr()
+
 
 
