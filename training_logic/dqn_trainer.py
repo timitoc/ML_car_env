@@ -63,7 +63,7 @@ parser.add_argument('--mode', choices=['train', 'test', 'resume'], default='trai
 parser.add_argument('--weights', type=str, default=None)
 args = parser.parse_args()
 
-env = EnvironmentWrapper(enable_rendering=False)
+env = EnvironmentWrapper(enable_rendering=(args.mode == 'test'))
 np.random.seed(14238)
 env.seed(14238)
 nb_actions = env.action_space.n
