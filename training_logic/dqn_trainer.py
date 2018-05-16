@@ -16,14 +16,15 @@ from bridge import EnvironmentWrapper
 from epsStochastic import EpsStochasticPolicy
 
 
-class TestLogger(Callback):
+class TrainProgress(Callback):
     def __init__(self, file_path=None, interval=100):
-        super(TestLogger, self).__init__()
+        super(TrainProgress, self).__init__()
         self.file_path = file_path
         self.interval = interval
         self.reward_array = np.empty(shape=[0, 5])
         self.running_reward = 0
         self.total_steps = 0
+        self.above_sea_count = 0
         self.scores = deque(maxlen=100)
 
     def on_train_begin(self, logs):
@@ -44,16 +45,20 @@ class TestLogger(Callback):
             logs['episode_reward'],
             np.mean(self.scores),
         ]
+        if variables[1] > 1041:
+            self.above_sea_count += 1
         self.running_reward = 0.99 * self.running_reward + 0.01 * variables[1]
         self.reward_array = np.append(
             self.reward_array,
             [[self.total_steps, variables[0], variables[1], variables[2], self.running_reward]],
             axis=0)
         print(template.format(*variables))
-        if self.file_path is not None and episode % self.interval == 0:
+        if episode % self.interval == 0:
             self.save_data()
 
     def save_data(self):
+        if self.file_path is None:
+            return
         with open(self.file_path, 'w') as f:
             np.save(f, self.reward_array)
 
@@ -63,7 +68,8 @@ parser.add_argument('--mode', choices=['train', 'test', 'resume'], default='trai
 parser.add_argument('--weights', type=str, default=None)
 args = parser.parse_args()
 
-env = EnvironmentWrapper(enable_rendering=(args.mode == 'test'))
+# env = EnvironmentWrapper(enable_rendering=(args.mode == 'test'))
+env = EnvironmentWrapper(enable_rendering=True)
 np.random.seed(14238)
 env.seed(14238)
 nb_actions = env.action_space.n
@@ -104,7 +110,7 @@ if args.mode == 'resume':
     dqn.load_weights(weights_filename)
 
 if args.mode == 'train' or args.mode == 'resume':
-    callbacks = [TestLogger('rewards_dump')]
+    callbacks = [TrainProgress('rewards_dump')]
     checkpoint_weights_filename = 'model_checkpoints/dqn_' + env.env_name + '_weights_{step}.h5f'
     callbacks += [ModelIntervalCheckpoint(checkpoint_weights_filename, interval=20000)]
     dqn.fit(env, callbacks=callbacks, nb_steps=3500000, visualize=True, verbose=2)
@@ -117,9 +123,13 @@ if args.mode == 'train' or args.mode == 'resume':
 
 else:
     weights_filename = None
+    test_for = 2000
     if args.weights:
         weights_filename = args.weights
         dqn.load_weights(weights_filename)
     else:
         print "You need to specify a model checkpoint for testing"
-    dqn.test(env, nb_episodes=200, visualize=True)
+    testData = TrainProgress(file_path=None)
+    dqn.test(env, callbacks=[testData], nb_episodes=test_for, visualize=True)
+    print "Finished testing for {0} episodes with {1} mean reward and {2} above see level"\
+        .format(test_for, sum(testData.scores)/100, testData.above_sea_count)

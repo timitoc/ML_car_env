@@ -13,14 +13,15 @@ obstacle_images = ['obstacle0.png', 'obstacle1.png', 'obstacle2.png', 'obstacle3
 
 
 class Scenario(object):
-    def __init__(self, random_car_x, random_car_y):
+    def __init__(self, random_car_x, random_car_y, allow_reverse_parking):
         self.random_car_x = random_car_x
         self.random_car_y = random_car_y
+        self.allow_reverse_parking = allow_reverse_parking
 
 
 class VerticalScenario(Scenario):
-    def __init__(self, random_car_x=570, random_car_y=30, spawn_count=None, lowest_spot=3):
-        super(VerticalScenario, self).__init__(random_car_x, random_car_y)
+    def __init__(self, random_car_x=570, random_car_y=30, allow_reverse_parking=False, spawn_count=None, lowest_spot=3):
+        super(VerticalScenario, self).__init__(random_car_x, random_car_y, allow_reverse_parking)
         if spawn_count is None:
             spawn_count = [7, 8, 9]
         self.spawn_count = spawn_count
@@ -133,7 +134,8 @@ class Environment(object):
         margin = 105 - 10 * x
         for i in range(0, x):
             if i == parking_spot_index:
-                self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * margin - 15, 250), normal_angle=270))
+                self.scene.add_park(ParkingSpot(Point(15 + i * 64 + i * margin - 15, 250),
+                                    normal_angle=270, allow_reverse_parking=self.scenario.allow_reverse_parking))
             else:
                 self.scene.add_obstacle(Obstacle(Point(15 + i * 64 + i * margin + randint(-3, 3), 270 + randint(-3, 3)),
                                                  obstacle_images[randint(0, 4)]))
@@ -148,7 +150,7 @@ class Environment(object):
             self.spawn_9()
 
         car_x_offset = 20
-        car_y_offset = 20
+        car_y_offset = 30
         car_x_limit = 570
         car_y_limit = 180
         self.scene.set_car(Car((car_x_offset + int(car_x_limit * np.random.random_sample()),

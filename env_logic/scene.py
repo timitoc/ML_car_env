@@ -131,7 +131,7 @@ class Scene:
         else:
             distance_rew = -log(max(self.get_distance_to_goal() / initial_distance, 0.000045)).real
         # print self.car.angle, " ", -log(float(self.car.angle)/360 + 0.001).real
-        angle_delta = abs(self.car.angle % 360 - self.parking_spots[0].normal_angle).real
+        angle_delta = self.parking_spots[0].get_angle_delta(self.car.angle)
         angle_def = 1 - (angle_delta if angle_delta < 180 else 360 - angle_delta) / 180
         angle_rew = distance_rew * angle_def * angle_def
         return angle_rew
